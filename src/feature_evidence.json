@@ -1,0 +1,42 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-in-the-test-scenarios-panel-s-per-scenario-custom-youtube-video-configuration-ui-add-a-preview-action-that-lets-the-user-open-the-existing-scenariovideomodal-to-preview-the-currently-entered-unsaved-youtube-url-video-id-before-saving-it",
+      "featureTitle": "In the Test Scenarios panel’s per-scenario “Custom YouTube Video” configuration UI, add a “Preview” action that lets the user open the existing ScenarioVideoModal to preview the currently entered (unsaved) YouTube URL/video ID before saving it.",
+      "files": [
+        "frontend/src/components/TestScenariosPanel.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-46"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-ensure-the-preview-flow-uses-the-same-youtube-url-video-id-validation-and-embed-resolution-rules-as-existing-scenario-playback-and-keep-all-user-facing-text-in-english",
+      "featureTitle": "Ensure the preview flow uses the same YouTube URL/video ID validation and embed-resolution rules as existing scenario playback, and keep all user-facing text in English.",
+      "files": [
+        "frontend/src/components/ScenarioVideoModal.tsx",
+        "frontend/src/components/TestScenariosPanel.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-47"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

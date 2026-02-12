@@ -1,0 +1,541 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 29,
+  "summary": "Web-based Keylogger Awareness Tool (educational only) that simulates keylogging inside a controlled input box, displays a simulated attacker dashboard, includes AI risk detection and antivirus/auto-blocking simulations, and provides interactive modern UI (animations, 3D effects) plus non-technical awareness content—all fully client-side with strong ethics/privacy safeguards.",
+  "architectural_notes": [
+    "Fully client-side (no backend required); do not transmit data to any external server.",
+    "Do not capture keystrokes outside the demo input field; no background logging.",
+    "Do not store user input (no persistent storage); session-only simulated activity if needed.",
+    "Include clear ethics/privacy disclaimer and ensure all behaviors are explicit simulations (visual/dummy logic only).",
+    "If adding scenario videos, keep them fully client-side (bundled/static assets) with no external streaming/tracking; do not transmit user data.",
+    "User requested YouTube-hosted scenario videos; this conflicts with the 'fully client-side/bundled static assets only' video constraint and may introduce external streaming/tracking/privacy considerations.",
+    "If supporting in-app 'search YouTube' for scenario videos, this likely requires external calls (YouTube Data API) and potentially API keys/backend proxy; this conflicts with the current fully client-side/no-external-data constraints unless explicitly approved and disclosed."
+  ],
+  "known_issues": [
+    "Pending decision: whether to allow YouTube embeds/external video playback vs. keeping scenario videos fully client-side static assets per current privacy/ethics constraints.",
+    "New scope/decision needed: whether to implement in-app YouTube searching (external API calls/API keys) vs. limiting to user-pasted YouTube URLs only, to preserve client-side privacy constraints."
+  ],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-create-a-top-of-app-persistent-disclaimer-banner-and-repeated-in-context-warnings-stating-the-app-is-a-simulation-for-educational-cybersecurity-awareness-only-does-not-capture-keystrokes-outside-the-demo-input-does-not-transmit-data-and-does-not-store-user-input",
+      "title": "Create a top-of-app persistent disclaimer banner and repeated in-context warnings stating the app is a simulation for educational/cybersecurity awareness only, does not capture keystrokes outside the demo input, does not transmit data, and does not store user input.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-simulated-keylogger-module-provide-a-controlled-text-input-area-where-typing-is-captured-only-from-that-input-component-and-render-the-captured-characters-events-in-a-simulated-hacker-view-panel-attacker-dashboard-on-the-right-including-a-purely-visual-data-transmission-animation",
+      "title": "Implement the Simulated Keylogger Module: provide a controlled text input area where typing is captured ONLY from that input component, and render the captured characters/events in a simulated 'Hacker View Panel' (attacker dashboard) on the right, including a purely visual 'data transmission' animation.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-admin-demo-mode-toggle-to-show-hide-the-attacker-dashboard-panel-without-affecting-the-demo-input-functionality",
+      "title": "Add an Admin Demo Mode toggle to show/hide the attacker dashboard panel without affecting the demo input functionality.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-ai-risk-detector-simulation-compute-a-demo-only-risk-level-low-medium-high-based-on-typing-speed-and-simple-pattern-heuristics-applied-only-to-the-controlled-input-value-and-visualize-the-result-with-animated-progress-bars-a-circular-threat-meter-and-an-explanation-popup-clarifying-that-real-ai-uses-behavioral-analysis",
+      "title": "Implement the AI Risk Detector simulation: compute a demo-only risk level (Low/Medium/High) based on typing speed and simple pattern heuristics applied ONLY to the controlled input value, and visualize the result with animated progress bars, a circular threat meter, and an explanation popup clarifying that real AI uses behavioral analysis.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-the-simulated-antivirus-scanner-provide-a-scan-action-that-runs-a-purely-visual-scan-sequence-of-the-simulated-keylogger-activity-shows-a-scanning-animation-then-displays-threat-detected-with-threat-name-simulated-keylogger-threat-and-offers-quarantine-and-remove-actions-with-corresponding-animations",
+      "title": "Implement the Simulated Antivirus Scanner: provide a 'Scan' action that runs a purely visual scan sequence of the simulated keylogger activity, shows a scanning animation, then displays 'Threat Detected' with threat name 'Simulated Keylogger Threat', and offers 'Quarantine' and 'Remove' actions with corresponding animations.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-auto-blocking-simulation-that-automatically-disables-the-simulated-keylogger-capture-within-the-module-when-the-risk-level-becomes-high-shows-a-red-alert-animation-and-displays-threat-blocked-successfully-provide-a-reset-unblock-control-suitable-for-demos",
+      "title": "Add an Auto-Blocking simulation that automatically disables the simulated keylogger capture (within the module) when the risk level becomes High, shows a red alert animation, and displays 'Threat Blocked Successfully'. Provide a reset/unblock control suitable for demos.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-an-attack-simulation-timeline-component-that-animates-the-step-by-step-flow-user-types-keylogger-captures-sends-visual-antivirus-detects-blocks-synchronized-with-the-state-of-the-simulated-modules",
+      "title": "Create an Attack Simulation Timeline component that animates the step-by-step flow: User types → Keylogger captures → Sends (visual) → Antivirus detects → Blocks, synchronized with the state of the simulated modules.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-an-awareness-section-for-non-technical-users-containing-explanation-of-what-a-keylogger-is-types-hardware-software-kernel-based-prevention-tips-animated-infographics-a-real-world-case-study-section-educational-only-and-a-5-question-multiple-choice-quiz-with-scoring-and-answer-explanations",
+      "title": "Build an Awareness Section for non-technical users containing: explanation of what a keylogger is, types (Hardware, Software, Kernel-based), prevention tips, animated infographics, a Real-world Case Study section (educational only), and a 5-question multiple-choice quiz with scoring and answer explanations.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-educational-popups-tooltips-that-explain-each-simulation-stage-capture-transmission-risk-detection-antivirus-scanning-quarantine-removal-auto-block-in-plain-english-and-emphasize-ethical-use",
+      "title": "Add educational popups/tooltips that explain each simulation stage (capture, transmission, risk detection, antivirus scanning, quarantine/removal, auto-block) in plain English and emphasize ethical use.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-client-side-report-generator-that-produces-a-downloadable-awareness-report-as-a-pdf-simulation-downloaded-file-generated-locally-in-the-browser-summarizing-the-user-s-demo-run-e-g-risk-peaks-scan-result-blocked-status-and-key-prevention-tips-without-saving-anything-server-side",
+      "title": "Implement a client-side 'Report Generator' that produces a downloadable awareness report as a PDF simulation (downloaded file generated locally in the browser) summarizing the user’s demo run (e.g., risk peaks, scan result, blocked status) and key prevention tips, without saving anything server-side.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-test-scenarios-panel-that-provides-10-predefined-demo-scenarios-to-trigger-low-risk-medium-risk-high-risk-auto-blocking-antivirus-detection-and-at-least-one-false-positive-by-programmatically-populating-the-controlled-demo-input-and-or-driving-the-simulated-state-without-using-any-global-keystroke-logging",
+      "title": "Add a 'Test Scenarios' panel that provides 10 predefined demo scenarios to trigger Low risk, Medium risk, High risk, Auto-blocking, Antivirus detection, and at least one false positive, by programmatically populating the controlled demo input and/or driving the simulated state (without using any global keystroke logging).",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-modern-interactive-professional-ui-with-a-coherent-visual-theme-dark-cybersecurity-glassmorphism-look-with-neon-green-red-accents-smooth-transitions-animated-data-lines-rotating-3d-dashboard-cards-loading-animations-and-simulated-real-time-counters-include-3d-ui-effects-using-react-three-fiber-where-appropriate",
+      "title": "Create a modern, interactive, professional UI with a coherent visual theme: dark cybersecurity glassmorphism look with neon green/red accents, smooth transitions, animated data lines, rotating 3D dashboard cards, loading animations, and simulated real-time counters. Include 3D UI effects using React Three Fiber where appropriate.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enforce-privacy-security-by-design-in-the-implementation-do-not-add-any-backend-endpoints-for-logging-do-not-persist-typed-text-in-backend-or-durable-client-storage-do-not-transmit-user-input-externally-and-ensure-no-background-global-keystroke-capture-is-implemented",
+      "title": "Enforce privacy/security-by-design in the implementation: do not add any backend endpoints for logging; do not persist typed text in backend or durable client storage; do not transmit user input externally; and ensure no background/global keystroke capture is implemented.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-and-include-custom-static-visual-assets-icons-illustrations-background-that-match-the-cyber-glassmorphism-theme-and-use-them-from-the-frontend-as-static-files-not-served-processed-via-backend",
+      "title": "Generate and include custom static visual assets (icons/illustrations/background) that match the cyber glassmorphism theme and use them from the frontend as static files (not served/processed via backend).",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-first-run-onboarding-screen-modal-or-full-screen-overlay-that-appears-when-a-user-opens-the-app-for-the-first-time-and-guides-them-through-the-educational-simulation-context-and-basic-steps-of-using-the-dashboard",
+      "title": "Add a first-run onboarding screen (modal or full-screen overlay) that appears when a user opens the app for the first time and guides them through the educational simulation context and basic steps of using the Dashboard.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-persist-the-onboarding-dismissal-state-locally-so-the-onboarding-screen-is-not-shown-again-on-subsequent-visits-unless-the-user-explicitly-chooses-to-view-it-again",
+      "title": "Persist the onboarding dismissal state locally so the onboarding screen is not shown again on subsequent visits unless the user explicitly chooses to view it again.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-onboarding-screen-is-accessible-and-non-disruptive-to-the-existing-simulation-experience-and-navigation",
+      "title": "Ensure the onboarding screen is accessible and non-disruptive to the existing simulation experience and navigation.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-small-settings-panel-on-the-dashboard-page-that-lets-users-tweak-the-simulation-behavior-demo-only-without-adding-any-backend-functionality",
+      "title": "Add a small “Settings” panel on the Dashboard page that lets users tweak the simulation behavior (demo-only) without adding any backend functionality.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-extend-the-client-side-simulation-state-to-include-configurable-settings-for-key-simulation-parameters-demo-only-and-wire-those-settings-into-existing-simulation-logic",
+      "title": "Extend the client-side simulation state to include configurable settings for key simulation parameters (demo-only), and wire those settings into existing simulation logic.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-settings-panel-is-consistent-with-existing-educational-ethical-messaging-and-does-not-weaken-privacy-guarantees",
+      "title": "Ensure the Settings panel is consistent with existing educational/ethical messaging and does not weaken privacy guarantees.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-reusable-lightweight-contextual-help-tooltip-component-for-the-frontend-that-can-be-attached-to-any-control-icon-button-toggle-label-and-displays-short-explanatory-text-in-english",
+      "title": "Implement a reusable, lightweight contextual help tooltip component for the frontend that can be attached to any control (icon button, toggle, label) and displays short explanatory text in English.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-contextual-help-tooltips-to-key-dashboard-controls-and-simulation-modules-to-explain-what-each-control-module-does-in-the-simulation-context",
+      "title": "Add contextual help tooltips to key Dashboard controls and simulation modules to explain what each control/module does in the simulation context.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-tooltip-system-is-accessible-and-non-disruptive-appropriate-aria-attributes-keyboard-operability-and-sensible-placement-overflow-behavior-on-small-screens",
+      "title": "Ensure the tooltip system is accessible and non-disruptive: appropriate ARIA attributes, keyboard operability, and sensible placement/overflow behavior on small screens.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-onboarding-step-slide-to-the-guided-tour-that-provides-a-quick-glossary-of-keylogging-related-terms-written-in-plain-english-and-clearly-labeled-as-educational-context",
+      "title": "Add a new onboarding step (slide) to the guided tour that provides a quick glossary of keylogging-related terms, written in plain English and clearly labeled as educational context.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-small-next-steps-wrap-up-section-that-appears-after-a-learner-completes-the-awareness-quiz-providing-clear-guidance-on-what-to-do-next-in-the-app-e-g-revisit-prevention-tips-go-to-the-dashboard-simulation-re-open-the-guided-tour-retake-the-quiz-all-user-facing-text-must-be-in-english-and-must-maintain-the-existing-educational-ethical-framing",
+      "title": "Add a small 'Next Steps' wrap-up section that appears after a learner completes the Awareness Quiz, providing clear guidance on what to do next in the app (e.g., revisit prevention tips, go to the Dashboard simulation, re-open the guided tour, retake the quiz). All user-facing text must be in English and must maintain the existing educational/ethical framing.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-new-next-steps-wrap-up-ui-is-accessible-and-consistent-with-the-existing-design-system-glassmorphism-panels-button-styles-spacing-the-wrap-up-controls-must-be-keyboard-operable-and-have-appropriate-accessible-labels",
+      "title": "Ensure the new 'Next Steps' wrap-up UI is accessible and consistent with the existing design system (glassmorphism panels, button styles, spacing). The wrap-up controls must be keyboard operable and have appropriate accessible labels.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-quick-recap-card-section-to-the-awareness-quiz-completion-view-shown-after-the-learner-finishes-all-questions-that-provides-a-short-plain-english-summary-of-key-takeaways-e-g-what-keyloggers-do-common-types-and-practical-prevention-steps-and-reinforces-the-educational-ethical-framing",
+      "title": "Add a \"Quick Recap\" card/section to the Awareness Quiz completion view (shown after the learner finishes all questions) that provides a short, plain-English summary of key takeaways (e.g., what keyloggers do, common types, and practical prevention steps) and reinforces the educational/ethical framing.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-new-quick-recap-section-is-accessible-and-non-disruptive-semantic-heading-structure-keyboard-safe-interaction-if-any-controls-are-added-and-appropriate-contrast-readability-consistent-with-the-existing-design-system",
+      "title": "Ensure the new Quick Recap section is accessible and non-disruptive: semantic heading structure, keyboard-safe interaction (if any controls are added), and appropriate contrast/readability consistent with the existing design system.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-brief-clearly-labeled-closing-message-for-learners-at-the-end-of-the-awareness-quiz-completion-view-after-the-existing-quick-recap-and-next-steps-sections-that-reinforces-the-educational-ethical-framing-and-encourages-safe-privacy-respecting-security-habits-all-user-facing-text-must-be-in-english",
+      "title": "Add a brief, clearly labeled closing message for learners at the end of the Awareness Quiz completion view (after the existing \"Quick Recap\" and \"Next Steps\" sections) that reinforces the educational/ethical framing and encourages safe, privacy-respecting security habits. All user-facing text must be in English.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-a-cyber-related-photo-style-background-image-that-can-be-used-as-a-card-background-while-matching-the-existing-dark-cybersecurity-glassmorphism-theme-subtle-high-contrast-safe-not-distracting",
+      "title": "Generate a cyber-related photo-style background image that can be used as a card background while matching the existing dark cybersecurity/glassmorphism theme (subtle, high-contrast safe, not distracting).",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-app-s-card-styling-so-that-card-surfaces-e-g-elements-using-the-existing-glass-panel-styling-and-rotating-dashboard-card-containers-render-with-the-new-cyber-photo-background-behind-the-glass-overlay-while-keeping-text-controls-legible-and-preserving-the-current-blur-glassmorphism-effect",
+      "title": "Update the app’s card styling so that card surfaces (e.g., elements using the existing .glass-panel styling and rotating dashboard card containers) render with the new cyber photo background behind the glass overlay, while keeping text/controls legible and preserving the current blur/glassmorphism effect.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-client-side-report-generator-so-the-downloaded-report-includes-the-full-reconstructed-text-the-current-controlled-demo-input-value-as-a-clearly-labeled-section-e-g-reconstructed-text",
+      "title": "Update the client-side report generator so the downloaded report includes the full reconstructed text (the current controlled demo input value) as a clearly labeled section (e.g., \"Reconstructed Text\").",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-report-generator-typing-so-the-report-generation-function-explicitly-accepts-and-uses-the-reconstructed-text-value-from-simulation-state",
+      "title": "Update report generator typing so the report generation function explicitly accepts and uses the reconstructed text value from simulation state.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-generate-report-ui-tooltip-help-text-and-any-other-relevant-user-facing-copy-near-report-generation-to-mention-that-the-report-includes-reconstructed-text-and-keep-all-text-in-english",
+      "title": "Update the \"Generate Report\" UI tooltip/help text (and any other relevant user-facing copy near report generation) to mention that the report includes reconstructed text, and keep all text in English.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-test-scenarios-panel-so-the-existing-play-button-for-each-scenario-plays-a-scenario-specific-video-client-side-when-clicked-instead-of-only-running-the-scenario-typing-simulation",
+      "title": "Update the Test Scenarios panel so the existing Play button for each scenario plays a scenario-specific video (client-side) when clicked, instead of only running the scenario typing simulation.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-consistent-video-playback-ui-for-scenarios-e-g-modal-dialog-or-inline-expandable-player-with-controls-to-close-stop-the-video-and-ensure-it-is-accessible-keyboard-operable-focus-managed-and-with-appropriate-aria-labeling",
+      "title": "Implement a consistent video playback UI for scenarios (e.g., modal/dialog or inline expandable player) with controls to close/stop the video, and ensure it is accessible (keyboard operable, focus managed, and with appropriate ARIA labeling).",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-static-asset-video-file-convention-and-wiring-so-scenario-videos-are-loaded-from-the-frontend-s-static-public-assets-not-through-the-backend-and-provide-a-graceful-fallback-message-in-english-if-a-video-file-is-missing-or-fails-to-load",
+      "title": "Add a static-asset video file convention and wiring so scenario videos are loaded from the frontend’s static public assets (not through the backend), and provide a graceful fallback message in English if a video file is missing or fails to load.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-define-the-interaction-between-scenario-video-playback-and-scenario-execution-when-a-scenario-play-button-is-clicked-start-the-scenario-s-video-playback-and-also-run-the-corresponding-scenario-simulation-in-the-dashboard-using-the-existing-runscenario-behavior-unless-the-user-closes-the-video-immediately",
+      "title": "Define the interaction between scenario video playback and scenario execution: when a scenario Play button is clicked, start the scenario’s video playback and also run the corresponding scenario simulation in the dashboard (using the existing runScenario behavior), unless the user closes the video immediately.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-current-static-asset-scenario-video-mapping-with-a-youtube-based-mapping-for-each-existing-scenario-so-each-scenario-s-play-button-can-resolve-to-a-youtube-video-to-play",
+      "title": "Replace the current static-asset scenario video mapping with a YouTube-based mapping for each existing scenario, so each scenario’s Play button can resolve to a YouTube video to play.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-scenario-video-player-modal-to-support-youtube-playback-embedded-player-when-a-youtube-video-is-available-for-the-selected-scenario-while-preserving-existing-accessibility-and-close-focus-behaviors",
+      "title": "Update the scenario video player modal to support YouTube playback (embedded player) when a YouTube video is available for the selected scenario, while preserving existing accessibility and close/focus behaviors.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-curate-and-add-topic-relevant-youtube-links-for-each-existing-test-scenario-10-scenarios-and-wire-them-into-the-test-scenarios-panel-so-clicking-play-starts-both-the-youtube-video-playback-and-the-corresponding-scenario-simulation-runscenario-as-it-does-today",
+      "title": "Curate and add topic-relevant YouTube links for each existing test scenario (10 scenarios) and wire them into the Test Scenarios panel so clicking Play starts both the YouTube video playback and the corresponding scenario simulation (runScenario) as it does today.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-any-user-facing-copy-in-the-test-scenarios-panel-module-info-that-currently-claims-no-external-calls-so-it-accurately-discloses-that-youtube-videos-are-loaded-from-an-external-service-while-keeping-all-text-in-english-and-maintaining-the-app-s-educational-ethical-framing",
+      "title": "Update any user-facing copy in the Test Scenarios panel/module info that currently claims “no external calls” so it accurately discloses that YouTube videos are loaded from an external service, while keeping all text in English and maintaining the app’s educational/ethical framing.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-per-scenario-custom-youtube-video-configuration-ui-in-the-test-scenarios-panel-that-lets-a-user-paste-a-youtube-url-or-video-id-for-each-existing-scenario-and-save-it-for-future-visits-local-only",
+      "title": "Add a per-scenario “custom YouTube video” configuration UI in the Test Scenarios panel that lets a user paste a YouTube URL (or video ID) for each existing scenario and save it for future visits (local-only).",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-scenario-video-resolution-so-the-play-action-uses-the-scenario-s-custom-youtube-link-when-present-otherwise-it-falls-back-to-the-existing-curated-mapping-in-frontend-src-lib-scenariovideos-ts-and-then-opens-scenariovideomodal-to-directly-play-the-resolved-youtube-embed",
+      "title": "Update scenario video resolution so the Play action uses the scenario’s custom YouTube link when present; otherwise it falls back to the existing curated mapping in frontend/src/lib/scenarioVideos.ts, and then opens ScenarioVideoModal to directly play the resolved YouTube embed.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-provide-a-lightweight-search-on-youtube-helper-in-the-test-scenarios-video-configuration-ui-that-opens-a-youtube-search-in-a-new-tab-for-the-selected-scenario-no-youtube-data-api-usage-and-ensure-user-facing-copy-clearly-states-that-video-content-loads-from-youtube-external-service",
+      "title": "Provide a lightweight “Search on YouTube” helper in the Test Scenarios video configuration UI that opens a YouTube search in a new tab for the selected scenario (no YouTube Data API usage), and ensure user-facing copy clearly states that video content loads from YouTube (external service).",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-test-scenarios-panel-s-per-scenario-custom-youtube-video-configuration-ui-add-a-preview-action-that-lets-the-user-open-the-existing-scenariovideomodal-to-preview-the-currently-entered-unsaved-youtube-url-video-id-before-saving-it",
+      "title": "In the Test Scenarios panel’s per-scenario “Custom YouTube Video” configuration UI, add a “Preview” action that lets the user open the existing ScenarioVideoModal to preview the currently entered (unsaved) YouTube URL/video ID before saving it.",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-preview-flow-uses-the-same-youtube-url-video-id-validation-and-embed-resolution-rules-as-existing-scenario-playback-and-keep-all-user-facing-text-in-english",
+      "title": "Ensure the preview flow uses the same YouTube URL/video ID validation and embed-resolution rules as existing scenario playback, and keep all user-facing text in English.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Simulated keylogger module: controlled input box only, simulated capture, hacker/attacker view panel, fake transmission animation, and clear simulation warning text",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "AI Risk Detector simulation: typing speed/pattern checks (dummy logic), Low/Medium/High risk levels, animated progress bars, and educational explanation popup",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Simulated Antivirus Scanner: scanning animation, \"Threat Detected\" with \"Simulated Keylogger Threat\", quarantine/removal animations (visual only)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Auto-blocking simulation: when risk becomes high, stop/disable keylogger simulation, show red alert animation and \"Threat Blocked Successfully\" message",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Awareness section for non-technical users: what keyloggers are, types, prevention tips, animated infographics, and a 5-question quiz",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Modern interactive UI: glassmorphism dark cyber theme, 3D rotating cards, smooth transitions, animated data lines, simulated counters, loading animations",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Educational popups and a top disclaimer banner explaining each stage and reinforcing ethical use",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Admin demo mode toggle to show/hide the attacker dashboard",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Report generator: downloadable awareness report (PDF simulation)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Attack simulation timeline: step-by-step animation (type → capture → send → detect → block) plus interactive threat meter (circular risk gauge)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Add a quick onboarding screen shown on first open to guide users through the demo (educational simulation context and basic steps)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add a small settings panel so users can tweak simulation behavior (demo-only controls)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Add a simple help tooltip system (contextual help tooltips in the UI)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add an additional awareness slide/section that provides a quick glossary of keylogging terms for users",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Add a small “Next Steps” slide/section shown after a learner finishes the module, guiding them on what to do next (educational wrap-up)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Add a quick end-of-module recap card/slide that gives learners a short summary of key takeaways",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Add a brief closing message for learners at the end of the experience (educational wrap-up/closing note)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Update dashboard/UI cards to use a cyber-related photo background (card background image) while maintaining the existing glassmorphism/cyber theme",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Include the reconstructed (captured) demo text in the downloaded Generate Report PDF",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Enhance the Test Scenarios panel so each scenario uses the existing Play button to launch/play a scenario-specific video (client-side) demonstrating that scenario",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Change scenario demo videos to play via YouTube embeds/links and curate/add topic-relevant YouTube video URLs for each scenario",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Add support for custom per-scenario YouTube videos: provide a pasteable YouTube URL input (and/or in-app YouTube search) so pressing a scenario’s video/play option opens the player and directly plays the related YouTube video for that scenario",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Add an option to preview a custom per-scenario YouTube link (URL/video) before saving it in the scenario video configuration UI",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Keylogger Awareness Tool",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

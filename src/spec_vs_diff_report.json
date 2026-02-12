@@ -1,0 +1,15 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-12T16:36:19.857Z",
+  "summary": "Diff implements a per-scenario \"Preview\" flow for unsaved custom YouTube links by adding preview state/handlers in TestScenariosPanel and enhancing ScenarioVideoModal to resolve embed URLs from a raw videoSrc, show English fallback errors, and restore focus on close.",
+  "missing_requirements": [],
+  "hallucinated_features": [],
+  "confidence": 0.66,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/ScenarioVideoModal.tsx",
+    "frontend/src/components/TestScenariosPanel.tsx",
+    "project_state.json"
+  ]
+}

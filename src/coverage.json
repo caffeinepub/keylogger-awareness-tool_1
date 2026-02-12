@@ -1,0 +1,51 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-12T16:36:19.861Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 2,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-46",
+        "summary": "In the Test Scenarios panel’s per-scenario “Custom YouTube Video” configuration UI, add a “Preview” action that lets the user open the existing ScenarioVideoModal to preview the currently entered (unsaved) YouTube URL/video ID before saving it.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/TestScenariosPanel.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/TestScenariosPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-47",
+        "summary": "Ensure the preview flow uses the same YouTube URL/video ID validation and embed-resolution rules as existing scenario playback, and keep all user-facing text in English.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/TestScenariosPanel.tsx",
+          "frontend/src/components/ScenarioVideoModal.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/TestScenariosPanel.tsx",
+          "frontend/src/components/ScenarioVideoModal.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/ScenarioVideoModal.tsx",
+    "frontend/src/components/TestScenariosPanel.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

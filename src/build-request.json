@@ -1,0 +1,64 @@
+{
+  "kind": "build_request",
+  "title": "Add a preview option for custom per-scenario YouTube links before saving",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-46",
+      "text": "In the Test Scenarios panel’s per-scenario “Custom YouTube Video” configuration UI, add a “Preview” action that lets the user open the existing ScenarioVideoModal to preview the currently entered (unsaved) YouTube URL/video ID before saving it.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-3"
+        ],
+        "quotes": [
+          "Want to add an option to preview the custom link before saving it?",
+          "yes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Each scenario’s expanded configuration area includes a clearly labeled \"Preview\" control next to the existing \"Save\" control.",
+        "Clicking \"Preview\" opens the existing ScenarioVideoModal and plays the video resolved from the current input value for that scenario (even if it has not been saved).",
+        "If the input is empty or invalid, \"Preview\" does not open the modal and the user sees an English validation message (reusing the existing validation error UI pattern).",
+        "Previewing a link does not write anything to localStorage and does not change which video will play via the scenario’s main Play button until the user clicks \"Save\".",
+        "Closing the modal restores keyboard focus to the element that opened the preview (consistent with current modal focus behavior)."
+      ]
+    },
+    {
+      "id": "REQ-47",
+      "text": "Ensure the preview flow uses the same YouTube URL/video ID validation and embed-resolution rules as existing scenario playback, and keep all user-facing text in English.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2",
+          "msg-3"
+        ],
+        "quotes": [
+          "Want to add an option to preview the custom link before saving it?",
+          "yes"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The preview action uses the existing validation logic (e.g., validateYouTubeUrl / getYouTubeEmbedUrl behavior) so any link that can be previewed is also eligible to be saved.",
+        "The ScenarioVideoModal continues to show a graceful English fallback message if the provided input cannot be converted to an embed URL or if the iframe fails to load.",
+        "No backend calls or new backend functionality are introduced for previewing or saving custom links."
+      ]
+    }
+  ],
+  "constraints": [
+    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Do not add backend endpoints or persistence for scenario video links; custom per-scenario links must remain local-only (localStorage) as they are today.",
+    "Do not introduce any YouTube Data API usage or API keys for preview; preview must work with the existing URL/video-id parsing and embed behavior.",
+    "All user-facing text added/changed must be in English."
+  ],
+  "nonGoals": [
+    "Changing the existing curated scenario-to-YouTube mapping in frontend/src/lib/scenarioVideos.ts.",
+    "Adding new scenarios or altering scenario simulation behavior (runScenario) when previewing.",
+    "Implementing real-time features (e.g., WebSockets) or any server-side video proxying."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
