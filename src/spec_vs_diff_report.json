@@ -1,15 +1,61 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-12T16:36:19.857Z",
-  "summary": "Diff implements a per-scenario \"Preview\" flow for unsaved custom YouTube links by adding preview state/handlers in TestScenariosPanel and enhancing ScenarioVideoModal to resolve embed URLs from a raw videoSrc, show English fallback errors, and restore focus on close.",
-  "missing_requirements": [],
-  "hallucinated_features": [],
-  "confidence": 0.66,
+  "generatedAt": "2026-02-13T07:36:59.730Z",
+  "summary": "Diff adds a new scenario entry \"Public Computer Login\" to the existing Test Scenarios list, but the diff excerpt does not provide enough evidence that the new scenario has corresponding runner preset text, learning content, and quiz data wired up as required.",
+  "missing_requirements": [
+    {
+      "id": "REQ-1",
+      "requirement": "New scenario has associated learning content returned by getScenarioContent (frontend/src/lib/scenarioLearningContent.ts) and it renders correctly in the collapsible learning-content section.",
+      "reason": "Although TestScenariosPanel calls getScenarioContent(scenario.id) and a new scenario id was added, the diff for scenarioLearningContent.ts is truncated and does not show an entry for 'public-shared-computer-login'.",
+      "evidence": [
+        "frontend/src/components/TestScenariosPanel.tsx",
+        "frontend/src/lib/scenarioLearningContent.ts (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-1",
+      "requirement": "New scenario has an associated quiz entry (frontend/src/lib/scenarioQuizzes.ts) and clicking “Take Test” opens the quiz modal for that scenario without errors.",
+      "reason": "The scenarioQuizzes.ts diff is truncated and does not show an entry for 'public-shared-computer-login', so it’s not verifiable that the new scenario has quiz data and will open without errors.",
+      "evidence": [
+        "frontend/src/components/TestScenariosPanel.tsx",
+        "frontend/src/lib/scenarioQuizzes.ts (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "The new scenario’s preset text is included in the runScenario mapping in frontend/src/hooks/useSimulationState.ts and plays back into the simulation input.",
+      "reason": "The useSimulationState.ts diff is truncated before showing the runScenario implementation/mapping. There is no visible evidence that 'public-shared-computer-login' is mapped to preset playback text that populates demoInput.",
+      "evidence": [
+        "frontend/src/hooks/useSimulationState.ts (truncated)"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "requirement": "Running the scenario produces a non-trivial outcome (e.g., Medium/High risk or auto-block) consistent with the scenario expected label.",
+      "reason": "The diff does not show the new scenario’s actual preset text or the completed runScenario playback behavior, so the resulting risk level/auto-block behavior cannot be verified against the UI 'expected' label.",
+      "evidence": [
+        "frontend/src/components/TestScenariosPanel.tsx",
+        "frontend/src/hooks/useSimulationState.ts (truncated)"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Added/updated project tracking metadata in project_state.json (new_feature_requests AR-1/AR-2/AR-3).",
+      "reason": "BuildRequest does not ask for changes to project_state.json; this appears to be internal bookkeeping rather than a requested product change.",
+      "evidence": [
+        "project_state.json"
+      ]
+    }
+  ],
+  "confidence": 0.58,
   "changed_files": [
     "frontend-file-summaries.txt",
-    "frontend/src/components/ScenarioVideoModal.tsx",
     "frontend/src/components/TestScenariosPanel.tsx",
+    "frontend/src/hooks/useSimulationState.ts",
+    "frontend/src/lib/scenarioLearningContent.ts",
+    "frontend/src/lib/scenarioQuizzes.ts",
     "project_state.json"
   ]
 }

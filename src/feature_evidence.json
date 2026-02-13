@@ -2,10 +2,12 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-the-test-scenarios-panel-s-per-scenario-custom-youtube-video-configuration-ui-add-a-preview-action-that-lets-the-user-open-the-existing-scenariovideomodal-to-preview-the-currently-entered-unsaved-youtube-url-video-id-before-saving-it",
-      "featureTitle": "In the Test Scenarios panel’s per-scenario “Custom YouTube Video” configuration UI, add a “Preview” action that lets the user open the existing ScenarioVideoModal to preview the currently entered (unsaved) YouTube URL/video ID before saving it.",
+      "featureId": "feature-add-a-new-practical-test-scenario-that-is-clearly-related-to-the-app-s-keylogger-awareness-simulation-e-g-a-real-world-public-shared-computer-login-style-scenario-and-make-it-available-from-the-existing-test-scenarios-panel-with-working-run-scenario-learning-content-and-quiz-support",
+      "featureTitle": "Add a new, practical test scenario that is clearly related to the app’s keylogger-awareness simulation (e.g., a real-world “public/shared computer login” style scenario) and make it available from the existing “Test Scenarios” panel with working “Run Scenario”, learning content, and quiz support.",
       "files": [
-        "frontend/src/components/TestScenariosPanel.tsx"
+        "frontend/src/components/TestScenariosPanel.tsx",
+        "frontend/src/lib/scenarioLearningContent.ts",
+        "frontend/src/lib/scenarioQuizzes.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -15,16 +17,15 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-46"
+        "REQ-1"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-ensure-the-preview-flow-uses-the-same-youtube-url-video-id-validation-and-embed-resolution-rules-as-existing-scenario-playback-and-keep-all-user-facing-text-in-english",
-      "featureTitle": "Ensure the preview flow uses the same YouTube URL/video ID validation and embed-resolution rules as existing scenario playback, and keep all user-facing text in English.",
+      "featureId": "feature-update-the-scenario-runner-s-preset-text-for-the-newly-added-scenario-to-be-educational-defensive-and-privacy-safe-no-real-credentials-avoid-providing-instructions-that-enable-wrongdoing-while-still-being-realistic-enough-to-demonstrate-risk-scoring-auto-blocking-behavior",
+      "featureTitle": "Update the scenario runner’s preset text for the newly added scenario to be educational, defensive, and privacy-safe (no real credentials; avoid providing instructions that enable wrongdoing), while still being realistic enough to demonstrate risk scoring/auto-blocking behavior.",
       "files": [
-        "frontend/src/components/ScenarioVideoModal.tsx",
-        "frontend/src/components/TestScenariosPanel.tsx"
+        "frontend/src/hooks/useSimulationState.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -34,7 +35,7 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-47"
+        "REQ-2"
       ],
       "confidence": "high"
     }

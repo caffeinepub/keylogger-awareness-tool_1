@@ -202,6 +202,7 @@ export const useSimulationState = create<SimulationState>((set, get) => ({
       'false-positive': 'Normal text',
       'auto-block-trigger': 'AdminPassword123!@#$%',
       'mixed-patterns': 'User123 password admin P@ssw0rd',
+      'public-shared-computer-login': 'username: john.doe@email.com password: MySecureP@ss2024!',
     };
     
     const text = scenarios[scenario] || scenario;

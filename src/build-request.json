@@ -1,61 +1,55 @@
 {
   "kind": "build_request",
-  "title": "Add a preview option for custom per-scenario YouTube links before saving",
+  "title": "Add a more useful, real-world “Run Scenario” workflow",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-46",
-      "text": "In the Test Scenarios panel’s per-scenario “Custom YouTube Video” configuration UI, add a “Preview” action that lets the user open the existing ScenarioVideoModal to preview the currently entered (unsaved) YouTube URL/video ID before saving it.",
+      "id": "REQ-1",
+      "text": "Add a new, practical test scenario that is clearly related to the app’s keylogger-awareness simulation (e.g., a real-world “public/shared computer login” style scenario) and make it available from the existing “Test Scenarios” panel with working “Run Scenario”, learning content, and quiz support.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2",
-          "msg-3"
+          "msg-1"
         ],
         "quotes": [
-          "Want to add an option to preview the custom link before saving it?",
-          "yes"
+          "add run scenario with something usefula nd related to it"
         ]
       },
       "acceptanceCriteria": [
-        "Each scenario’s expanded configuration area includes a clearly labeled \"Preview\" control next to the existing \"Save\" control.",
-        "Clicking \"Preview\" opens the existing ScenarioVideoModal and plays the video resolved from the current input value for that scenario (even if it has not been saved).",
-        "If the input is empty or invalid, \"Preview\" does not open the modal and the user sees an English validation message (reusing the existing validation error UI pattern).",
-        "Previewing a link does not write anything to localStorage and does not change which video will play via the scenario’s main Play button until the user clicks \"Save\".",
-        "Closing the modal restores keyboard focus to the element that opened the preview (consistent with current modal focus behavior)."
+        "A new scenario appears in the existing Test Scenarios list (frontend/src/components/TestScenariosPanel.tsx) with a name, short description, and expected outcome.",
+        "Clicking “Run Scenario” on the new scenario triggers the existing runScenario flow (frontend/src/hooks/useSimulationState.ts) and visibly plays back the scenario text into the simulation input (no manual typing required).",
+        "The scenario has associated learning content returned by getScenarioContent (frontend/src/lib/scenarioLearningContent.ts) and it renders correctly in the collapsible learning-content section.",
+        "The scenario has an associated quiz entry (frontend/src/lib/scenarioQuizzes.ts) and clicking “Take Test” opens the quiz modal for that scenario without errors."
       ]
     },
     {
-      "id": "REQ-47",
-      "text": "Ensure the preview flow uses the same YouTube URL/video ID validation and embed-resolution rules as existing scenario playback, and keep all user-facing text in English.",
+      "id": "REQ-2",
+      "text": "Update the scenario runner’s preset text for the newly added scenario to be educational, defensive, and privacy-safe (no real credentials; avoid providing instructions that enable wrongdoing), while still being realistic enough to demonstrate risk scoring/auto-blocking behavior.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-2",
-          "msg-3"
+          "msg-1"
         ],
         "quotes": [
-          "Want to add an option to preview the custom link before saving it?",
-          "yes"
+          "add run scenario with something usefula nd related to it"
         ]
       },
       "acceptanceCriteria": [
-        "The preview action uses the existing validation logic (e.g., validateYouTubeUrl / getYouTubeEmbedUrl behavior) so any link that can be previewed is also eligible to be saved.",
-        "The ScenarioVideoModal continues to show a graceful English fallback message if the provided input cannot be converted to an embed URL or if the iframe fails to load.",
-        "No backend calls or new backend functionality are introduced for previewing or saving custom links."
+        "The new scenario’s preset text is included in the runScenario mapping in frontend/src/hooks/useSimulationState.ts.",
+        "The preset text does not include real-looking secrets (e.g., actual credit card/SSN formats) and stays in a defensive/awareness tone.",
+        "Running the scenario produces a non-trivial outcome in the simulation (e.g., Medium/High risk or auto-block if enabled), consistent with the scenario’s “Expected” label shown in the UI."
       ]
     }
   ],
   "constraints": [
-    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
-    "Do not add backend endpoints or persistence for scenario video links; custom per-scenario links must remain local-only (localStorage) as they are today.",
-    "Do not introduce any YouTube Data API usage or API keys for preview; preview must work with the existing URL/video-id parsing and embed behavior.",
-    "All user-facing text added/changed must be in English."
+    "Do not edit any files under frontend/src/components/ui (read-only components must only be composed).",
+    "Do not edit immutable hook files listed in SYSTEM_CONTEXT.frontend.immutablePaths.",
+    "Backend must remain single-actor; do not add additional canisters/services."
   ],
   "nonGoals": [
-    "Changing the existing curated scenario-to-YouTube mapping in frontend/src/lib/scenarioVideos.ts.",
-    "Adding new scenarios or altering scenario simulation behavior (runScenario) when previewing.",
-    "Implementing real-time features (e.g., WebSockets) or any server-side video proxying."
+    "Do not add real-time networking, data exfiltration, or any functionality that captures/transmits real user keystrokes.",
+    "Do not implement third-party auth providers; keep authentication limited to Internet Identity (if used at all).",
+    "Do not introduce a database or any external persistence service."
   ],
   "imageRequirements": {
     "required": [],

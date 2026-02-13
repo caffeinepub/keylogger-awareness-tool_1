@@ -1,44 +1,48 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Preview unsaved custom per-scenario YouTube links in ScenarioVideoModal",
+  "title": "Add real-world public/shared computer login scenario to Run Scenario workflow",
   "requirements": [
     {
-      "id": "REQ-46",
-      "summary": "Add a per-scenario Preview control in the Custom YouTube Video config to open ScenarioVideoModal for the current unsaved input without persisting.",
+      "id": "REQ-1",
+      "summary": "Add a new real-world keylogger-awareness scenario to the existing Test Scenarios panel with working Run Scenario, learning content, and quiz support.",
       "acceptanceCriteria": [
-        "Each scenario’s expanded configuration area includes a clearly labeled \"Preview\" control next to the existing \"Save\" control.",
-        "Clicking \"Preview\" opens the existing ScenarioVideoModal and plays the video resolved from the current input value for that scenario (even if it has not been saved).",
-        "If the input is empty or invalid, \"Preview\" does not open the modal and the user sees an English validation message (reusing the existing validation error UI pattern).",
-        "Previewing a link does not write anything to localStorage and does not change which video will play via the scenario’s main Play button until the user clicks \"Save\".",
-        "Closing the modal restores keyboard focus to the element that opened the preview (consistent with current modal focus behavior)."
+        "A new scenario appears in the existing Test Scenarios list (frontend/src/components/TestScenariosPanel.tsx) with a name, short description, and expected outcome.",
+        "Clicking “Run Scenario” on the new scenario triggers the existing runScenario flow (frontend/src/hooks/useSimulationState.ts) and visibly plays back the scenario text into the simulation input (no manual typing required).",
+        "The scenario has associated learning content returned by getScenarioContent (frontend/src/lib/scenarioLearningContent.ts) and it renders correctly in the collapsible learning-content section.",
+        "The scenario has an associated quiz entry (frontend/src/lib/scenarioQuizzes.ts) and clicking “Take Test” opens the quiz modal for that scenario without errors."
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/TestScenariosPanel.tsx",
           "operation": "modify",
-          "description": "Add a \"Preview\" Button next to the existing \"Save\" Button within each expanded scenario configuration. Implement a preview click handler that (1) reads the current per-scenario input value, (2) validates it using the existing YouTube validation utility, (3) if valid sets modal state to open ScenarioVideoModal with videoSrc derived from the current unsaved input (without calling saveCustomVideo / without updating the saved customVideos map), and (4) if empty/invalid sets validationErrors using the same UI pattern already used for Save. Ensure modal close uses existing close flow so focus returns to the preview-triggering button per current modal behavior."
+          "description": "Add a new scenario entry (e.g., id like \"public-shared-computer-login\") to the existing scenarios array with name, short description, and Expected label so it appears in the current Test Scenarios grid. This will continue to use existing shadcn-ui Button and Collapsible compositions for learning content and actions. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/lib/scenarioLearningContent.ts",
+          "operation": "modify",
+          "description": "Add a ScenarioContent entry keyed by the new scenario id, with a defensive, awareness-focused title and content tailored to a public/shared computer login context so getScenarioContent returns it and the existing collapsible section renders it."
+        },
+        {
+          "path": "frontend/src/lib/scenarioQuizzes.ts",
+          "operation": "modify",
+          "description": "Add a ScenarioQuiz entry keyed by the new scenario id (5 questions) so getScenarioQuiz can supply quiz content and ScenarioQuizModal opens without errors when \"Take Test\" is clicked."
         }
       ]
     },
     {
-      "id": "REQ-47",
-      "summary": "Reuse existing YouTube validation and embed-resolution rules for preview, keep English-only UI text, and avoid any backend involvement.",
+      "id": "REQ-2",
+      "summary": "Provide educational, privacy-safe preset text for the new scenario that still produces a meaningful risk/auto-block outcome when run.",
       "acceptanceCriteria": [
-        "The preview action uses the existing validation logic (e.g., validateYouTubeUrl / getYouTubeEmbedUrl behavior) so any link that can be previewed is also eligible to be saved.",
-        "The ScenarioVideoModal continues to show a graceful English fallback message if the provided input cannot be converted to an embed URL or if the iframe fails to load.",
-        "No backend calls or new backend functionality are introduced for previewing or saving custom links."
+        "The new scenario’s preset text is included in the runScenario mapping in frontend/src/hooks/useSimulationState.ts.",
+        "The preset text does not include real-looking secrets (e.g., actual credit card/SSN formats) and stays in a defensive/awareness tone.",
+        "Running the scenario produces a non-trivial outcome in the simulation (e.g., Medium/High risk or auto-block if enabled), consistent with the scenario’s “Expected” label shown in the UI."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/TestScenariosPanel.tsx",
+          "path": "frontend/src/hooks/useSimulationState.ts",
           "operation": "modify",
-          "description": "Ensure the Preview handler relies on the existing validateYouTubeUrl logic (from customScenarioVideos) and passes the raw URL/video ID into ScenarioVideoModal (so embed conversion uses the same getYouTubeEmbedUrl rules as playback). Confirm all new/updated user-facing validation messages are in English and that preview introduces no backend calls."
-        },
-        {
-          "path": "frontend/src/components/ScenarioVideoModal.tsx",
-          "operation": "modify",
-          "description": "Adjust modal fallback messaging (English) to gracefully cover both cases: (1) when a provided videoSrc cannot be converted to an embed URL (invalid/unsupported input) and (2) when the iframe fails to load after an embed URL is produced. Keep existing focus-management behavior intact."
+          "description": "Extend the existing runScenario scenarios mapping with the new scenario id and preset playback text that is realistic but privacy-safe (no real credentials), using password-like patterns/keywords to reliably trigger Medium/High risk and (if enabled) auto-block during the existing character-by-character playback flow."
         }
       ]
     }

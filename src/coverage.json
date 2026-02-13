@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-12T16:36:19.861Z",
+  "generatedAt": "2026-02-13T07:36:59.732Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -11,27 +11,29 @@
     "implemented": 2,
     "items": [
       {
-        "id": "REQ-46",
-        "summary": "In the Test Scenarios panel’s per-scenario “Custom YouTube Video” configuration UI, add a “Preview” action that lets the user open the existing ScenarioVideoModal to preview the currently entered (unsaved) YouTube URL/video ID before saving it.",
+        "id": "REQ-1",
+        "summary": "Add a new, practical test scenario that is clearly related to the app’s keylogger-awareness simulation (e.g., a real-world “public/shared computer login” style scenario) and make it available from the existing “Test Scenarios” panel with working “Run Scenario”, learning content, and quiz support.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/TestScenariosPanel.tsx"
+          "frontend/src/components/TestScenariosPanel.tsx",
+          "frontend/src/lib/scenarioLearningContent.ts",
+          "frontend/src/lib/scenarioQuizzes.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/TestScenariosPanel.tsx"
+          "frontend/src/components/TestScenariosPanel.tsx",
+          "frontend/src/lib/scenarioLearningContent.ts",
+          "frontend/src/lib/scenarioQuizzes.ts"
         ]
       },
       {
-        "id": "REQ-47",
-        "summary": "Ensure the preview flow uses the same YouTube URL/video ID validation and embed-resolution rules as existing scenario playback, and keep all user-facing text in English.",
+        "id": "REQ-2",
+        "summary": "Update the scenario runner’s preset text for the newly added scenario to be educational, defensive, and privacy-safe (no real credentials; avoid providing instructions that enable wrongdoing), while still being realistic enough to demonstrate risk scoring/auto-blocking behavior.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/TestScenariosPanel.tsx",
-          "frontend/src/components/ScenarioVideoModal.tsx"
+          "frontend/src/hooks/useSimulationState.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/TestScenariosPanel.tsx",
-          "frontend/src/components/ScenarioVideoModal.tsx"
+          "frontend/src/hooks/useSimulationState.ts"
         ]
       }
     ]
@@ -41,8 +43,10 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/ScenarioVideoModal.tsx",
     "frontend/src/components/TestScenariosPanel.tsx",
+    "frontend/src/hooks/useSimulationState.ts",
+    "frontend/src/lib/scenarioLearningContent.ts",
+    "frontend/src/lib/scenarioQuizzes.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
