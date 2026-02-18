@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { sanitizeKeystroke, isValidKeystrokeInput } from '@/lib/inputSanitizer';
 
 export type RiskLevel = 'Low' | 'Medium' | 'High';
 export type AVStatus = 'idle' | 'scanning' | 'detected' | 'quarantined' | 'removed';
@@ -10,19 +11,17 @@ interface KeystrokeEvent {
 
 interface SimulationSettings {
   autoBlockingEnabled: boolean;
-  avScanDuration: number; // milliseconds
-  scenarioPlaybackSpeed: number; // milliseconds per character
+  avScanDuration: number;
   transmissionAnimationEnabled: boolean;
   riskThresholds: {
-    mediumThreshold: number; // pattern score threshold for Medium risk
-    highThreshold: number; // pattern score threshold for High risk
+    mediumThreshold: number;
+    highThreshold: number;
   };
 }
 
 const DEFAULT_SETTINGS: SimulationSettings = {
   autoBlockingEnabled: true,
   avScanDuration: 2000,
-  scenarioPlaybackSpeed: 100,
   transmissionAnimationEnabled: true,
   riskThresholds: {
     mediumThreshold: 30,
@@ -31,36 +30,20 @@ const DEFAULT_SETTINGS: SimulationSettings = {
 };
 
 interface SimulationState {
-  // Demo input
   demoInput: string;
   capturedStream: KeystrokeEvent[];
-  
-  // Admin mode
   adminDemoModeEnabled: boolean;
-  
-  // Risk detection
   riskLevel: RiskLevel;
   typingSpeed: number;
   patternScore: number;
-  
-  // Antivirus
   avStatus: AVStatus;
-  
-  // Auto-blocking
   isBlocked: boolean;
-  
-  // Timeline stage
   timelineStage: number;
-  
-  // Run summary for report
   peakRisk: RiskLevel;
   scanCount: number;
   blockCount: number;
-  
-  // Settings
   settings: SimulationSettings;
   
-  // Actions
   setDemoInput: (input: string) => void;
   addKeystroke: (key: string) => void;
   toggleAdminMode: () => void;
@@ -69,9 +52,33 @@ interface SimulationState {
   removeThreat: () => void;
   resetSimulation: () => void;
   unblock: () => void;
-  runScenario: (scenario: string) => void;
   updateSettings: (settings: Partial<SimulationSettings>) => void;
   resetSettings: () => void;
+}
+
+// Validation helpers
+function validateRiskLevel(level: number): number {
+  const validated = Math.max(0, Math.min(100, level));
+  if (validated !== level) {
+    console.error('Invalid risk level, clamped to 0-100:', level);
+  }
+  return validated;
+}
+
+function validateCount(count: number): number {
+  const validated = Math.max(0, Math.floor(count));
+  if (validated !== count) {
+    console.error('Invalid count, must be non-negative integer:', count);
+  }
+  return validated;
+}
+
+function validateThreshold(threshold: number): number {
+  const validated = Math.max(0, Math.min(100, threshold));
+  if (validated !== threshold) {
+    console.error('Invalid threshold, clamped to 0-100:', threshold);
+  }
+  return validated;
 }
 
 export const useSimulationState = create<SimulationState>((set, get) => ({
@@ -93,32 +100,41 @@ export const useSimulationState = create<SimulationState>((set, get) => ({
     const state = get();
     if (state.isBlocked) return;
 
+    // Validate and sanitize input
+    if (typeof input !== 'string') {
+      console.error('Invalid demo input type');
+      return;
+    }
+
+    if (!isValidKeystrokeInput(input)) {
+      console.warn('Potentially dangerous input detected and rejected');
+      return;
+    }
+
+    const sanitized = sanitizeKeystroke(input);
     const now = Date.now();
-    const newChar = input.slice(-1);
+    const newChar = sanitized.slice(-1);
     
-    if (newChar && input.length > state.demoInput.length) {
+    if (newChar && sanitized.length > state.demoInput.length) {
       const newStream = [...state.capturedStream, { key: newChar, timestamp: now }];
       
-      // Calculate typing speed (chars per second over last 5 seconds)
       const recentKeys = newStream.filter(k => now - k.timestamp < 5000);
       const typingSpeed = recentKeys.length / 5;
       
-      // Calculate pattern score (simple heuristics)
       let patternScore = 0;
-      if (input.length > 8 && /[A-Z]/.test(input) && /[0-9]/.test(input) && /[!@#$%^&*]/.test(input)) {
-        patternScore += 30; // Password-like pattern
+      if (sanitized.length > 8 && /[A-Z]/.test(sanitized) && /[0-9]/.test(sanitized) && /[!@#$%^&*]/.test(sanitized)) {
+        patternScore += 30;
       }
       if (typingSpeed > 3) {
-        patternScore += 20; // Fast typing
+        patternScore += 20;
       }
-      if (input.toLowerCase().includes('password') || input.toLowerCase().includes('admin')) {
-        patternScore += 40; // Sensitive keywords
+      if (sanitized.toLowerCase().includes('password') || sanitized.toLowerCase().includes('admin')) {
+        patternScore += 40;
       }
-      if (input.length > 20) {
-        patternScore += 10; // Long input
+      if (sanitized.length > 20) {
+        patternScore += 10;
       }
       
-      // Determine risk level using configurable thresholds
       const { mediumThreshold, highThreshold } = state.settings.riskThresholds;
       let riskLevel: RiskLevel = 'Low';
       if (patternScore > highThreshold || typingSpeed > 5) {
@@ -127,28 +143,26 @@ export const useSimulationState = create<SimulationState>((set, get) => ({
         riskLevel = 'Medium';
       }
       
-      // Update peak risk
       const riskValues = { Low: 1, Medium: 2, High: 3 };
       const currentPeakValue = riskValues[state.peakRisk];
       const newRiskValue = riskValues[riskLevel];
       const peakRisk = newRiskValue > currentPeakValue ? riskLevel : state.peakRisk;
       
-      // Auto-block on High risk (only if enabled in settings)
       const shouldBlock = state.settings.autoBlockingEnabled && riskLevel === 'High' && !state.isBlocked;
       
       set({
-        demoInput: input,
+        demoInput: sanitized,
         capturedStream: newStream,
-        typingSpeed,
-        patternScore,
+        typingSpeed: validateCount(typingSpeed),
+        patternScore: validateCount(patternScore),
         riskLevel,
         peakRisk,
         isBlocked: shouldBlock,
-        blockCount: state.blockCount + (shouldBlock ? 1 : 0),
-        timelineStage: Math.min(input.length > 0 ? 2 : 0, 5),
+        blockCount: validateCount(state.blockCount + (shouldBlock ? 1 : 0)),
+        timelineStage: Math.min(sanitized.length > 0 ? 2 : 0, 5),
       });
     } else {
-      set({ demoInput: input });
+      set({ demoInput: sanitized });
     }
   },
 
@@ -156,8 +170,20 @@ export const useSimulationState = create<SimulationState>((set, get) => ({
     const state = get();
     if (state.isBlocked) return;
     
+    if (!key || typeof key !== 'string') {
+      console.error('Invalid keystroke input');
+      return;
+    }
+    
+    if (!isValidKeystrokeInput(key)) {
+      console.error('Potentially dangerous keystroke input rejected');
+      return;
+    }
+    
+    const sanitized = sanitizeKeystroke(key);
+    
     set({
-      capturedStream: [...state.capturedStream, { key, timestamp: Date.now() }],
+      capturedStream: [...state.capturedStream, { key: sanitized, timestamp: Date.now() }],
     });
   },
 
@@ -167,7 +193,7 @@ export const useSimulationState = create<SimulationState>((set, get) => ({
     const state = get();
     const scanDuration = state.settings.avScanDuration;
     
-    set({ avStatus: 'scanning', scanCount: state.scanCount + 1, timelineStage: 3 });
+    set({ avStatus: 'scanning', scanCount: validateCount(state.scanCount + 1), timelineStage: 3 });
     setTimeout(() => {
       set({ avStatus: 'detected', timelineStage: 4 });
     }, scanDuration);
@@ -177,63 +203,41 @@ export const useSimulationState = create<SimulationState>((set, get) => ({
 
   removeThreat: () => set({ avStatus: 'removed', timelineStage: 5 }),
 
-  resetSimulation: () => set({
-    demoInput: '',
-    capturedStream: [],
-    riskLevel: 'Low',
-    typingSpeed: 0,
-    patternScore: 0,
-    avStatus: 'idle',
-    isBlocked: false,
-    timelineStage: 0,
-  }),
+  resetSimulation: () => {
+    set({
+      demoInput: '',
+      capturedStream: [],
+      riskLevel: 'Low',
+      typingSpeed: 0,
+      patternScore: 0,
+      avStatus: 'idle',
+      isBlocked: false,
+      timelineStage: 0,
+    });
+  },
 
   unblock: () => set({ isBlocked: false }),
 
-  runScenario: (scenario: string) => {
-    const scenarios: Record<string, string> = {
-      'low-risk': 'Hello world',
-      'medium-risk': 'This is a longer text with some numbers 123',
-      'high-risk': 'MyPassword123!@# AdminAccess',
-      'password-pattern': 'P@ssw0rd123!',
-      'rapid-typing': 'QuickTypingTestForRapidDetection',
-      'sensitive-keywords': 'admin password login credentials',
-      'long-input': 'This is a very long input that simulates someone typing a lot of text continuously without stopping for a while',
-      'false-positive': 'Normal text',
-      'auto-block-trigger': 'AdminPassword123!@#$%',
-      'mixed-patterns': 'User123 password admin P@ssw0rd',
-      'public-shared-computer-login': 'username: john.doe@email.com password: MySecureP@ss2024!',
-    };
-    
-    const text = scenarios[scenario] || scenario;
-    set({ demoInput: '', capturedStream: [], riskLevel: 'Low', isBlocked: false });
-    
-    // Simulate typing with configurable speed
-    const state = get();
-    const speed = state.settings.scenarioPlaybackSpeed;
-    
-    let index = 0;
-    const interval = setInterval(() => {
-      if (index < text.length) {
-        get().setDemoInput(text.slice(0, index + 1));
-        index++;
-      } else {
-        clearInterval(interval);
-      }
-    }, speed);
-  },
-
   updateSettings: (newSettings: Partial<SimulationSettings>) => {
-    set(state => ({
-      settings: {
-        ...state.settings,
-        ...newSettings,
+    set(state => {
+      const validated: SimulationSettings = {
+        autoBlockingEnabled: newSettings.autoBlockingEnabled ?? state.settings.autoBlockingEnabled,
+        avScanDuration: newSettings.avScanDuration !== undefined
+          ? Math.max(1000, newSettings.avScanDuration)
+          : state.settings.avScanDuration,
+        transmissionAnimationEnabled: newSettings.transmissionAnimationEnabled ?? state.settings.transmissionAnimationEnabled,
         riskThresholds: {
-          ...state.settings.riskThresholds,
-          ...(newSettings.riskThresholds || {}),
+          mediumThreshold: newSettings.riskThresholds?.mediumThreshold !== undefined
+            ? validateThreshold(newSettings.riskThresholds.mediumThreshold)
+            : state.settings.riskThresholds.mediumThreshold,
+          highThreshold: newSettings.riskThresholds?.highThreshold !== undefined
+            ? validateThreshold(newSettings.riskThresholds.highThreshold)
+            : state.settings.riskThresholds.highThreshold,
         },
-      },
-    }));
+      };
+      
+      return { settings: validated };
+    });
   },
 
   resetSettings: () => set({ settings: DEFAULT_SETTINGS }),

@@ -8,6 +8,7 @@ interface ThreatMeter3DProps {
 
 export default function ThreatMeter3D({ level, percentage }: ThreatMeter3DProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationFrameRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -21,6 +22,8 @@ export default function ThreatMeter3D({ level, percentage }: ThreatMeter3DProps)
     const radius = 80;
 
     const animate = () => {
+      if (!ctx || !canvas) return;
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Background circle
@@ -66,11 +69,24 @@ export default function ThreatMeter3D({ level, percentage }: ThreatMeter3DProps)
     };
 
     animate();
+
+    return () => {
+      if (animationFrameRef.current !== undefined) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
   }, [level, percentage]);
 
   return (
     <div className="flex items-center justify-center">
-      <canvas ref={canvasRef} width={200} height={200} className="drop-shadow-lg" />
+      <canvas 
+        ref={canvasRef} 
+        width={200} 
+        height={200} 
+        className="drop-shadow-lg"
+        aria-label={`Threat meter showing ${percentage}% ${level} risk`}
+        role="img"
+      />
     </div>
   );
 }

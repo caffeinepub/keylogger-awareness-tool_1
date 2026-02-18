@@ -1,37 +1,95 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
+  "summary": "Website security audit and bug fix project",
   "architectural_notes": [],
   "known_issues": [],
-  "isFixRequest": false,
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-add-a-new-practical-test-scenario-that-is-clearly-related-to-the-app-s-keylogger-awareness-simulation-e-g-a-real-world-public-shared-computer-login-style-scenario-and-make-it-available-from-the-existing-test-scenarios-panel-with-working-run-scenario-learning-content-and-quiz-support",
-      "title": "Add a new, practical test scenario that is clearly related to the app’s keylogger-awareness simulation (e.g., a real-world “public/shared computer login” style scenario) and make it available from the existing “Test Scenarios” panel with working “Run Scenario”, learning content, and quiz support.",
+      "id": "feature-review-and-fix-authentication-security-vulnerabilities-in-the-internet-identity-integration-including-session-management-token-validation-and-secure-logout-flow",
+      "title": "Review and fix authentication security vulnerabilities in the Internet Identity integration, including session management, token validation, and secure logout flow",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-the-scenario-runner-s-preset-text-for-the-newly-added-scenario-to-be-educational-defensive-and-privacy-safe-no-real-credentials-avoid-providing-instructions-that-enable-wrongdoing-while-still-being-realistic-enough-to-demonstrate-risk-scoring-auto-blocking-behavior",
-      "title": "Update the scenario runner’s preset text for the newly added scenario to be educational, defensive, and privacy-safe (no real credentials; avoid providing instructions that enable wrongdoing), while still being realistic enough to demonstrate risk scoring/auto-blocking behavior.",
+      "id": "feature-audit-and-fix-xss-vulnerabilities-in-user-input-handling-particularly-in-the-simulatedkeyloggermodule-where-keystrokes-are-captured-and-displayed",
+      "title": "Audit and fix XSS vulnerabilities in user input handling, particularly in the SimulatedKeyloggerModule where keystrokes are captured and displayed",
       "reqIds": [
         "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-localstorage-security-issues-by-encrypting-sensitive-data-and-implementing-proper-data-validation-on-read-operations-in-usesimulationstate-and-useappearancepreferences-hooks",
+      "title": "Fix localStorage security issues by encrypting sensitive data and implementing proper data validation on read operations in useSimulationState and useAppearancePreferences hooks",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-review-and-fix-potential-state-manipulation-vulnerabilities-in-the-zustand-store-by-adding-input-validation-to-all-state-update-actions-in-usesimulationstate",
+      "title": "Review and fix potential state manipulation vulnerabilities in the Zustand store by adding input validation to all state update actions in useSimulationState",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-accessibility-issues-including-missing-aria-labels-keyboard-navigation-bugs-and-focus-management-problems-in-modal-components-scenarioquizmodal-onboardingoverlay",
+      "title": "Fix accessibility issues including missing ARIA labels, keyboard navigation bugs, and focus management problems in modal components (ScenarioQuizModal, OnboardingOverlay)",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-error-boundary-implementation-to-properly-catch-and-handle-runtime-errors-throughout-the-application-preventing-white-screen-crashes",
+      "title": "Fix error boundary implementation to properly catch and handle runtime errors throughout the application, preventing white screen crashes",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-audit-and-fix-memory-leaks-from-animation-loops-event-listeners-and-canvas-operations-in-threatmeter3d-animatedinfographics-and-threesceneaccent-components",
+      "title": "Audit and fix memory leaks from animation loops, event listeners, and canvas operations in ThreatMeter3D, AnimatedInfographics, and ThreeSceneAccent components",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-potential-infinite-loop-and-performance-issues-in-simulation-state-calculations-particularly-in-the-auto-blocking-trigger-logic",
+      "title": "Fix potential infinite loop and performance issues in simulation state calculations, particularly in the auto-blocking trigger logic",
+      "reqIds": [
+        "REQ-10"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [
     {
-      "id": "AR-1",
-      "summary": "Add a useful, related 'run scenario' (example scenario/workflow) to the app",
-      "reqIds": [],
+      "id": "AR-5",
+      "summary": "Audit the backend actor for missing access control checks and implement proper authorization guards for all public methods",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Review and fix race conditions in React Query cache invalidation and actor recreation logic in useActor hook when identity changes",
+      "reqIds": [
+        "REQ-7"
+      ],
       "status": "pending"
     }
   ],
-  "projectName": "Add a more useful, real-world “Run Scenario” workflow",
+  "projectName": "Security audit and bug fixes",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

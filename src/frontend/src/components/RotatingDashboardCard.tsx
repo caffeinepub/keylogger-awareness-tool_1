@@ -24,9 +24,25 @@ export default function RotatingDashboardCard({ children, className = '' }: Rota
         const rotateY = ((x - centerX) / centerX) * 5;
         card.style.transform = `perspective(1000px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
       }}
+      onMouseMove={(e) => {
+        const card = e.currentTarget;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = ((y - centerY) / centerY) * 5;
+        const rotateY = ((x - centerX) / centerX) * 5;
+        card.style.transform = `perspective(1000px) rotateX(${-rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+      }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
       }}
+      onFocus={(e) => {
+        // Ensure keyboard users get clear focus without tilt
+        e.currentTarget.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+      }}
+      tabIndex={0}
     >
       {children}
     </div>

@@ -79,98 +79,76 @@ const steps = [
         </p>
         <div className="bg-card/50 border border-border rounded-lg p-4">
           <p className="text-sm">
-            <strong>Try it:</strong> Type a password-like pattern (e.g., "MyPassword123!") and watch the risk level increase. Then use the AV scanner to detect and remove the threat.
+            <strong>Try it:</strong> Type a password-like pattern (e.g., "MyPassword123!") and watch the risk level increase.
           </p>
         </div>
       </div>
     ),
   },
   {
-    title: 'Keylogging Terms Glossary',
-    icon: BookOpen,
-    content: (
-      <div className="space-y-4">
-        <p className="text-sm text-muted-foreground">
-          Understanding these terms will help you better grasp how keyloggers work and how to protect yourself:
-        </p>
-        <div className="grid grid-cols-1 gap-3 max-h-[280px] overflow-y-auto pr-2">
-          <div className="bg-card/50 border border-border rounded-lg p-3">
-            <h4 className="font-semibold text-sm text-[oklch(0.7_0.25_145)]">Keylogger</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              Malicious software that secretly records every keystroke you type, including passwords and sensitive information.
-            </p>
-          </div>
-          <div className="bg-card/50 border border-border rounded-lg p-3">
-            <h4 className="font-semibold text-sm text-[oklch(0.7_0.25_145)]">Keystroke</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              A single press of a key on your keyboard, which can be captured and logged by keylogging software.
-            </p>
-          </div>
-          <div className="bg-card/50 border border-border rounded-lg p-3">
-            <h4 className="font-semibold text-sm text-[oklch(0.7_0.25_145)]">Capture</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              The process of recording keystrokes, mouse clicks, or other user input without the user's knowledge.
-            </p>
-          </div>
-          <div className="bg-card/50 border border-border rounded-lg p-3">
-            <h4 className="font-semibold text-sm text-[oklch(0.7_0.25_145)]">Exfiltration</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              The unauthorized transfer of captured data from your device to an attacker's server or location.
-            </p>
-          </div>
-          <div className="bg-card/50 border border-border rounded-lg p-3">
-            <h4 className="font-semibold text-sm text-[oklch(0.7_0.25_145)]">Attacker</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              A malicious individual or group who installs keyloggers to steal sensitive information for fraud or identity theft.
-            </p>
-          </div>
-          <div className="bg-card/50 border border-border rounded-lg p-3">
-            <h4 className="font-semibold text-sm text-[oklch(0.7_0.25_145)]">Antivirus Scan</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              A security process that checks your system for malicious software, including keyloggers, and alerts you to threats.
-            </p>
-          </div>
-          <div className="bg-card/50 border border-border rounded-lg p-3">
-            <h4 className="font-semibold text-sm text-[oklch(0.7_0.25_145)]">Quarantine</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              Isolating detected malware in a secure area where it cannot harm your system or access your data.
-            </p>
-          </div>
-          <div className="bg-card/50 border border-border rounded-lg p-3">
-            <h4 className="font-semibold text-sm text-[oklch(0.7_0.25_145)]">False Positive</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              When security software incorrectly identifies safe software as malicious; rare but can happen with legitimate programs.
-            </p>
-          </div>
-          <div className="bg-card/50 border border-border rounded-lg p-3">
-            <h4 className="font-semibold text-sm text-[oklch(0.7_0.25_145)]">Credential</h4>
-            <p className="text-xs text-muted-foreground mt-1">
-              Login information such as usernames and passwords that keyloggers specifically target to gain unauthorized access.
-            </p>
-          </div>
-        </div>
-        <p className="text-xs text-muted-foreground italic">
-          Note: This glossary is for educational purposes only to help you understand cybersecurity concepts.
-        </p>
-      </div>
-    ),
-  },
-  {
-    title: 'Reset & Test Scenarios',
+    title: 'Test Scenarios & Reset',
     icon: RotateCcw,
     content: (
       <div className="space-y-4">
         <p>
-          Use the <strong>Reset button</strong> in the header to clear all simulation data and start fresh at any time.
+          The <strong>Test Scenarios</strong> section provides prebuilt examples demonstrating different risk levels and detection behaviors.
         </p>
         <p>
-          The <strong>Test Scenarios panel</strong> provides pre-configured examples that demonstrate different risk levels and detection behaviors.
+          Each scenario includes educational content and a quiz to test your knowledge about keylogger threats and prevention.
         </p>
-        <div className="bg-[oklch(0.7_0.25_145)]/10 border border-[oklch(0.7_0.25_145)]/30 rounded-lg p-4">
-          <p className="text-sm font-semibold">You're all set!</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Start exploring the dashboard to learn how keyloggers work and how to protect yourself. You can re-open this guide anytime using the Help button.
+        <div className="bg-card/50 border border-border rounded-lg p-4">
+          <p className="text-sm">
+            <strong>Reset button:</strong> Use the Reset button in the header to clear all simulation state and start fresh.
           </p>
+        </div>
+      </div>
+    ),
+  },
+  {
+    title: 'Glossary: Key Terms',
+    icon: BookOpen,
+    content: (
+      <div className="space-y-4">
+        <p className="text-sm text-muted-foreground mb-4">
+          Understanding these terms will help you navigate the simulation and learn about keylogger threats:
+        </p>
+        <div className="grid gap-3 max-h-[400px] overflow-y-auto pr-2">
+          <div className="bg-card/50 border border-border rounded-lg p-3">
+            <h4 className="font-semibold text-sm mb-1">Keylogger</h4>
+            <p className="text-xs text-muted-foreground">Software or hardware that records keystrokes to capture sensitive information.</p>
+          </div>
+          <div className="bg-card/50 border border-border rounded-lg p-3">
+            <h4 className="font-semibold text-sm mb-1">Risk Detection</h4>
+            <p className="text-xs text-muted-foreground">AI-powered analysis that identifies potentially sensitive patterns in typed text.</p>
+          </div>
+          <div className="bg-card/50 border border-border rounded-lg p-3">
+            <h4 className="font-semibold text-sm mb-1">Quarantine</h4>
+            <p className="text-xs text-muted-foreground">Isolating detected threats to prevent them from causing harm.</p>
+          </div>
+          <div className="bg-card/50 border border-border rounded-lg p-3">
+            <h4 className="font-semibold text-sm mb-1">Auto-Blocking</h4>
+            <p className="text-xs text-muted-foreground">Automatic prevention of high-risk actions to protect user data.</p>
+          </div>
+          <div className="bg-card/50 border border-border rounded-lg p-3">
+            <h4 className="font-semibold text-sm mb-1">Attack Timeline</h4>
+            <p className="text-xs text-muted-foreground">Visual representation of the stages in a keylogger attack lifecycle.</p>
+          </div>
+          <div className="bg-card/50 border border-border rounded-lg p-3">
+            <h4 className="font-semibold text-sm mb-1">Reconstructed Text</h4>
+            <p className="text-xs text-muted-foreground">Captured keystrokes assembled into readable text by the attacker.</p>
+          </div>
+          <div className="bg-card/50 border border-border rounded-lg p-3">
+            <h4 className="font-semibold text-sm mb-1">Two-Factor Authentication (2FA)</h4>
+            <p className="text-xs text-muted-foreground">Security method requiring two forms of verification to access accounts.</p>
+          </div>
+          <div className="bg-card/50 border border-border rounded-lg p-3">
+            <h4 className="font-semibold text-sm mb-1">Malware</h4>
+            <p className="text-xs text-muted-foreground">Malicious software designed to harm, exploit, or gain unauthorized access to systems.</p>
+          </div>
+          <div className="bg-card/50 border border-border rounded-lg p-3">
+            <h4 className="font-semibold text-sm mb-1">Phishing</h4>
+            <p className="text-xs text-muted-foreground">Fraudulent attempts to obtain sensitive information by disguising as trustworthy entities.</p>
+          </div>
         </div>
       </div>
     ),
@@ -179,151 +157,153 @@ const steps = [
 
 export default function OnboardingOverlay({ isOpen, onDismiss }: OnboardingOverlayProps) {
   const [currentStep, setCurrentStep] = useState(0);
-  const primaryButtonRef = useRef<HTMLButtonElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (isOpen) {
-      setCurrentStep(0);
-      // Focus the primary button when opened
       setTimeout(() => {
-        primaryButtonRef.current?.focus();
+        closeButtonRef.current?.focus();
       }, 100);
-      
-      // Prevent background scroll
+
       document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
+
+      const handleEscape = (e: KeyboardEvent) => {
+        if (e.key === 'Escape') {
+          onDismiss();
+        }
+      };
+      
+      const handleArrowKeys = (e: KeyboardEvent) => {
+        if (e.key === 'ArrowRight' && currentStep < steps.length - 1) {
+          setCurrentStep(prev => prev + 1);
+        } else if (e.key === 'ArrowLeft' && currentStep > 0) {
+          setCurrentStep(prev => prev - 1);
+        }
+      };
+
+      document.addEventListener('keydown', handleEscape);
+      document.addEventListener('keydown', handleArrowKeys);
+
+      return () => {
+        document.removeEventListener('keydown', handleEscape);
+        document.removeEventListener('keydown', handleArrowKeys);
+        document.body.style.overflow = '';
+      };
     }
-
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [isOpen]);
-
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        onDismiss();
-      }
-    };
-
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
-  }, [isOpen, onDismiss]);
+  }, [isOpen, onDismiss, currentStep]);
 
   if (!isOpen) return null;
 
-  const isLastStep = currentStep === steps.length - 1;
+  const currentStepData = steps[currentStep];
+  const Icon = currentStepData.icon;
   const isFirstStep = currentStep === 0;
-  const CurrentIcon = steps[currentStep].icon;
+  const isLastStep = currentStep === steps.length - 1;
 
   const handleNext = () => {
-    if (isLastStep) {
-      onDismiss();
-    } else {
-      setCurrentStep(prev => prev + 1);
+    if (!isLastStep) {
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
   const handlePrevious = () => {
     if (!isFirstStep) {
-      setCurrentStep(prev => prev - 1);
+      setCurrentStep((prev) => prev - 1);
     }
+  };
+
+  const handleFinish = () => {
+    setCurrentStep(0);
+    onDismiss();
   };
 
   return (
     <div
       ref={overlayRef}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-labelledby="onboarding-title"
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200"
-      onClick={(e) => {
-        if (e.target === overlayRef.current) {
-          onDismiss();
-        }
-      }}
+      data-testid="onboarding-overlay"
     >
-      <div className="relative w-full max-w-2xl bg-card border border-border rounded-xl shadow-2xl animate-in zoom-in-95 duration-200">
-        {/* Close button */}
-        <button
-          onClick={onDismiss}
-          className="absolute top-4 right-4 p-2 rounded-lg hover:bg-accent transition-colors"
-          aria-label="Close onboarding"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        {/* Content */}
-        <div className="p-8">
-          {/* Icon and Title */}
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[oklch(0.7_0.25_145)] to-[oklch(0.5_0.25_145)] flex items-center justify-center flex-shrink-0">
-              <CurrentIcon className="w-6 h-6 text-white" />
+      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-background border border-border rounded-xl shadow-2xl">
+        <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-background border-b border-border">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-cyber-accent/10 flex items-center justify-center">
+              <Icon className="w-6 h-6 text-cyber-accent" />
             </div>
-            <h2 id="onboarding-title" className="text-2xl font-bold">
-              {steps[currentStep].title}
+            <h2 id="onboarding-title" className="text-xl font-bold">
+              {currentStepData.title}
             </h2>
           </div>
+          <Button
+            ref={closeButtonRef}
+            onClick={onDismiss}
+            variant="ghost"
+            size="icon"
+            className="rounded-full"
+            aria-label="Close onboarding"
+            data-testid="onboarding-close"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
 
-          {/* Step content */}
-          <div className="mb-8 min-h-[200px]">
-            {steps[currentStep].content}
-          </div>
+        <div className="p-6" role="region" aria-live="polite">
+          {currentStepData.content}
+        </div>
 
-          {/* Progress indicators */}
-          <div className="flex items-center justify-center gap-2 mb-6">
+        <div className="sticky bottom-0 z-10 flex items-center justify-between p-6 bg-background border-t border-border">
+          <div className="flex items-center gap-2" role="navigation" aria-label="Onboarding progress">
             {steps.map((_, index) => (
-              <button
+              <div
                 key={index}
-                onClick={() => setCurrentStep(index)}
                 className={`h-2 rounded-full transition-all ${
                   index === currentStep
-                    ? 'w-8 bg-[oklch(0.7_0.25_145)]'
-                    : 'w-2 bg-muted hover:bg-muted-foreground/50'
+                    ? 'w-8 bg-cyber-accent'
+                    : 'w-2 bg-muted'
                 }`}
-                aria-label={`Go to step ${index + 1}`}
+                aria-label={`Step ${index + 1}${index === currentStep ? ' (current)' : ''}`}
               />
             ))}
           </div>
 
-          {/* Navigation buttons */}
-          <div className="flex items-center justify-between gap-4">
-            <Button
-              variant="outline"
-              onClick={onDismiss}
-              className="flex-1"
-            >
-              Skip
-            </Button>
-
-            <div className="flex gap-2 flex-1">
-              {!isFirstStep && (
-                <Button
-                  variant="outline"
-                  onClick={handlePrevious}
-                  className="flex-1"
-                >
-                  <ChevronLeft className="w-4 h-4 mr-1" />
-                  Previous
-                </Button>
-              )}
+          <div className="flex items-center gap-2">
+            {!isFirstStep && (
               <Button
-                ref={primaryButtonRef}
-                onClick={handleNext}
-                className="flex-1 bg-[oklch(0.7_0.25_145)] hover:bg-[oklch(0.65_0.25_145)] text-white"
+                onClick={handlePrevious}
+                variant="outline"
+                size="sm"
+                data-testid="onboarding-previous"
+                aria-label="Previous step"
               >
-                {isLastStep ? 'Start Demo' : 'Next'}
-                {!isLastStep && <ChevronRight className="w-4 h-4 ml-1" />}
+                <ChevronLeft className="w-4 h-4 mr-1" />
+                Previous
               </Button>
-            </div>
+            )}
+            {!isLastStep ? (
+              <Button
+                onClick={handleNext}
+                size="sm"
+                className="bg-cyber-accent hover:bg-cyber-accent-dark"
+                data-testid="onboarding-next"
+                aria-label="Next step"
+              >
+                Next
+                <ChevronRight className="w-4 h-4 ml-1" />
+              </Button>
+            ) : (
+              <Button
+                onClick={handleFinish}
+                size="sm"
+                className="bg-cyber-accent hover:bg-cyber-accent-dark"
+                data-testid="onboarding-finish"
+                aria-label="Finish onboarding"
+              >
+                Get Started
+              </Button>
+            )}
           </div>
-
-          {/* Step counter */}
-          <p className="text-center text-sm text-muted-foreground mt-4">
-            Step {currentStep + 1} of {steps.length}
-          </p>
         </div>
       </div>
     </div>

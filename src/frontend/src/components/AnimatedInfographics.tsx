@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 
 export default function AnimatedInfographics() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const animationFrameRef = useRef<number | undefined>(undefined);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -10,10 +11,11 @@ export default function AnimatedInfographics() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let animationFrame: number;
     let offset = 0;
 
     const animate = () => {
+      if (!ctx || !canvas) return;
+      
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
       // Draw animated data flow lines
@@ -35,13 +37,15 @@ export default function AnimatedInfographics() {
       }
 
       offset += 2;
-      animationFrame = requestAnimationFrame(animate);
+      animationFrameRef.current = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
-      cancelAnimationFrame(animationFrame);
+      if (animationFrameRef.current !== undefined) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
   }, []);
 
@@ -57,6 +61,7 @@ export default function AnimatedInfographics() {
         width={800}
         height={200}
         className="absolute inset-0 w-full h-full opacity-20 pointer-events-none"
+        aria-hidden="true"
       />
     </div>
   );

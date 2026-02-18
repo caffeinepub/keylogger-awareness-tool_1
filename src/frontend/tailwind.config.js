@@ -55,16 +55,25 @@ export default {
                     3: 'oklch(var(--chart-3))',
                     4: 'oklch(var(--chart-4))',
                     5: 'oklch(var(--chart-5))'
+                },
+                'cyber-accent': {
+                    DEFAULT: 'oklch(var(--cyber-accent) / <alpha-value>)',
+                    dark: 'oklch(var(--cyber-accent-dark) / <alpha-value>)'
                 }
             },
             borderRadius: {
                 lg: 'var(--radius)',
                 md: 'calc(var(--radius) - 2px)',
-                sm: 'calc(var(--radius) - 4px)'
+                sm: 'calc(var(--radius) - 4px)',
+                xl: 'calc(var(--radius) + 4px)',
+                '2xl': 'calc(var(--radius) + 8px)'
             },
             boxShadow: {
                 xs: '0 1px 2px 0 rgba(0,0,0,0.05)',
-                glow: '0 0 20px oklch(0.7 0.25 145 / 0.3)'
+                glow: '0 0 20px oklch(var(--cyber-accent) / 0.3)',
+                'glow-lg': '0 0 40px oklch(var(--cyber-accent) / 0.4)',
+                'glow-accent': '0 0 20px oklch(var(--cyber-accent) / 0.4)',
+                'card-hover': '0 8px 24px oklch(0 0 0 / 0.3), 0 0 0 1px oklch(var(--cyber-accent) / 0.5)'
             },
             keyframes: {
                 'accordion-down': {
@@ -77,17 +86,32 @@ export default {
                 },
                 'pulse-glow': {
                     '0%, 100%': { opacity: '1' },
-                    '50%': { opacity: '0.5' }
+                    '50%': { opacity: '0.6' }
+                },
+                'shimmer': {
+                    '0%': { backgroundPosition: '-1000px 0' },
+                    '100%': { backgroundPosition: '1000px 0' }
+                },
+                'glow': {
+                    '0%, 100%': { boxShadow: '0 0 20px oklch(var(--cyber-accent) / 0.3)' },
+                    '50%': { boxShadow: '0 0 40px oklch(var(--cyber-accent) / 0.6)' }
                 }
             },
             animation: {
                 'accordion-down': 'accordion-down 0.2s ease-out',
                 'accordion-up': 'accordion-up 0.2s ease-out',
-                'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                'shimmer': 'shimmer 2s infinite linear',
+                'glow': 'glow 2s infinite ease-in-out'
             },
             fontFamily: {
                 sans: ['Inter', 'system-ui', 'sans-serif'],
-                mono: ['Fira Code', 'monospace']
+                mono: ['Fira Code', 'Consolas', 'Monaco', 'monospace']
+            },
+            spacing: {
+                '18': '4.5rem',
+                '88': '22rem',
+                '128': '32rem'
             }
         }
     },

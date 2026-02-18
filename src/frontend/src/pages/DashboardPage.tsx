@@ -12,102 +12,123 @@ import SimulatedCounters from '../components/SimulatedCounters';
 import RotatingDashboardCard from '../components/RotatingDashboardCard';
 import ThreeSceneAccent from '../components/ThreeSceneAccent';
 import OnboardingOverlay from '../components/OnboardingOverlay';
-import SimulationSettingsPanel from '../components/SimulationSettingsPanel';
 import HelpTooltip from '../components/HelpTooltip';
+import DashboardHeroIntro from '../components/DashboardHeroIntro';
 import { useSimulationState } from '../hooks/useSimulationState';
 import { useOnboarding } from '../hooks/useOnboarding';
+import { ErrorBoundary } from '../components/ErrorBoundary';
 
 export default function DashboardPage() {
   const { adminDemoModeEnabled, resetSimulation } = useSimulationState();
   const { isOnboardingOpen, isInitializing, dismissOnboarding, openOnboarding } = useOnboarding();
 
   if (isInitializing) {
-    return null; // Prevent flash of content before onboarding check
+    return null;
   }
 
   return (
     <>
       <OnboardingOverlay isOpen={isOnboardingOpen} onDismiss={dismissOnboarding} />
       
-      <div className="space-y-6">
-        {/* Header Controls */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h2 className="text-2xl font-bold mb-1">Interactive Dashboard</h2>
-            <p className="text-sm text-muted-foreground">
-              Experience how keyloggers work in a safe, controlled environment
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <HelpTooltip content="Open the guided tour to learn about this educational simulation and how to use the dashboard safely.">
-              <button
-                onClick={openOnboarding}
-                className="flex items-center gap-2 px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg transition-colors"
-                aria-label="Show onboarding guide"
-              >
-                <HelpCircle className="w-4 h-4" />
-                <span className="font-medium">Help</span>
-              </button>
-            </HelpTooltip>
-            <AdminDemoModeToggle />
-            <ReportGeneratorButton />
-            <HelpTooltip content="Reset all simulation state including captured keystrokes, risk levels, and antivirus status. This is a local-only action.">
-              <button
-                onClick={resetSimulation}
-                className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/80 rounded-lg transition-colors"
-              >
-                <RefreshCw className="w-4 h-4" />
-                <span className="font-medium">Reset</span>
-              </button>
-            </HelpTooltip>
+      <div className="dashboard-container" data-testid="dashboard-page">
+        <DashboardHeroIntro />
+
+        <div className="dashboard-section">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h2 className="dashboard-section-title">Interactive Dashboard</h2>
+              <p className="dashboard-section-description">
+                Experience how keyloggers work in a safe, controlled environment
+              </p>
+            </div>
+            <div className="flex items-center gap-3">
+              <HelpTooltip content="Open the guided tour to learn about this educational simulation and how to use the dashboard safely.">
+                <button
+                  onClick={openOnboarding}
+                  className="interactive-button flex items-center gap-2 px-4 py-2 bg-muted hover:bg-muted/80 rounded-lg transition-all"
+                  aria-label="Show onboarding guide"
+                  data-testid="help-button"
+                >
+                  <HelpCircle className="w-4 h-4" />
+                  <span className="font-medium">Help</span>
+                </button>
+              </HelpTooltip>
+              <AdminDemoModeToggle />
+              <ReportGeneratorButton />
+              <HelpTooltip content="Reset all simulation state including captured keystrokes, risk levels, and antivirus status. This is a local-only action.">
+                <button
+                  onClick={resetSimulation}
+                  className="interactive-button flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/80 rounded-lg transition-all"
+                  data-testid="reset-button"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  <span className="font-medium">Reset</span>
+                </button>
+              </HelpTooltip>
+            </div>
           </div>
         </div>
 
-        {/* Counters */}
-        <SimulatedCounters />
+        <div className="dashboard-section">
+          <SimulatedCounters />
+        </div>
 
-        {/* Auto-blocking Alert */}
-        <AutoBlockingAlert />
+        <div className="dashboard-section">
+          <AutoBlockingAlert />
+        </div>
 
-        {/* Timeline */}
-        <RotatingDashboardCard>
-          <AttackSimulationTimeline />
-        </RotatingDashboardCard>
-
-        {/* Main Grid */}
-        <div className="grid lg:grid-cols-2 gap-6">
-          <RotatingDashboardCard>
-            <SimulatedKeyloggerModule />
-          </RotatingDashboardCard>
-
-          {adminDemoModeEnabled && (
+        <div className="dashboard-section">
+          <ErrorBoundary>
             <RotatingDashboardCard>
-              <AttackerDashboardPanel />
+              <AttackSimulationTimeline />
             </RotatingDashboardCard>
-          )}
+          </ErrorBoundary>
         </div>
 
-        {/* Risk Detector */}
-        <RotatingDashboardCard>
-          <AIRiskDetectorPanel />
-        </RotatingDashboardCard>
+        <div className="dashboard-section">
+          <div className="grid lg:grid-cols-2 gap-6">
+            <ErrorBoundary>
+              <RotatingDashboardCard>
+                <SimulatedKeyloggerModule />
+              </RotatingDashboardCard>
+            </ErrorBoundary>
 
-        {/* Antivirus Scanner */}
-        <RotatingDashboardCard>
-          <SimulatedAntivirusScanner />
-        </RotatingDashboardCard>
+            {adminDemoModeEnabled && (
+              <ErrorBoundary>
+                <RotatingDashboardCard>
+                  <AttackerDashboardPanel />
+                </RotatingDashboardCard>
+              </ErrorBoundary>
+            )}
+          </div>
+        </div>
 
-        {/* Settings Panel */}
-        <RotatingDashboardCard>
-          <SimulationSettingsPanel />
-        </RotatingDashboardCard>
+        <div className="dashboard-section">
+          <ErrorBoundary>
+            <RotatingDashboardCard>
+              <AIRiskDetectorPanel />
+            </RotatingDashboardCard>
+          </ErrorBoundary>
+        </div>
 
-        {/* Test Scenarios */}
-        <TestScenariosPanel />
+        <div className="dashboard-section">
+          <ErrorBoundary>
+            <RotatingDashboardCard>
+              <SimulatedAntivirusScanner />
+            </RotatingDashboardCard>
+          </ErrorBoundary>
+        </div>
 
-        {/* 3D Accent */}
+        <div className="dashboard-section">
+          <ErrorBoundary>
+            <TestScenariosPanel />
+          </ErrorBoundary>
+        </div>
+
         <div className="hidden lg:block">
-          <ThreeSceneAccent />
+          <ErrorBoundary>
+            <ThreeSceneAccent />
+          </ErrorBoundary>
         </div>
       </div>
     </>

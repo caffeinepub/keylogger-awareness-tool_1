@@ -11,8 +11,12 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden">
-      {/* Cyber background */}
-      <div className="fixed inset-0 z-0">
+      {/* Cyber background - non-interactive decoration */}
+      <div 
+        className="fixed inset-0 z-0 bg-decoration-layer" 
+        data-bg-decoration
+        aria-hidden="true"
+      >
         <img
           src="/assets/generated/cyber-bg.dim_1920x1080.png"
           alt=""
@@ -21,89 +25,100 @@ export default function Layout() {
         <div className="absolute inset-0 bg-gradient-to-br from-background via-background/95 to-background/90" />
       </div>
 
-      {/* Content */}
+      {/* Content - positioned above background */}
       <div className="relative z-10">
         <DisclaimerBanner />
 
         {/* Header */}
-        <header className="border-b border-border/50 backdrop-blur-xl bg-card/30" style={{ backgroundColor: 'oklch(0.205 0 0 / 0.3)' }}>
+        <header className="glass-header border-b border-border/50">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
+              {/* Logo & Brand */}
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[oklch(0.7_0.25_145)] to-[oklch(0.5_0.25_145)] flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-cyber-accent to-cyber-accent-dark flex items-center justify-center">
                   <Shield className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold tracking-tight">Keylogger Awareness Tool</h1>
-                  <p className="text-xs text-muted-foreground">Educational Simulation</p>
+                  <h1 className="text-lg md:text-xl font-bold">
+                    Keylogger Awareness Tool
+                  </h1>
+                  <p className="text-xs text-muted-foreground">
+                    Educational Simulation
+                  </p>
                 </div>
               </div>
 
               {/* Desktop Navigation */}
-              <nav className="hidden md:flex items-center gap-6">
+              <nav className="hidden md:flex items-center gap-2" aria-label="Main navigation">
                 <button
                   onClick={() => navigate({ to: '/' })}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  className={`nav-button flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                     currentPath === '/'
-                      ? 'bg-[oklch(0.7_0.25_145)] text-white'
+                      ? 'bg-cyber-accent text-white'
                       : 'hover:bg-accent text-foreground'
                   }`}
+                  aria-current={currentPath === '/' ? 'page' : undefined}
                 >
                   <Shield className="w-4 h-4" />
-                  <span className="font-medium">Dashboard</span>
+                  <span>Dashboard</span>
                 </button>
                 <button
                   onClick={() => navigate({ to: '/awareness' })}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  className={`nav-button flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                     currentPath === '/awareness'
-                      ? 'bg-[oklch(0.7_0.25_145)] text-white'
+                      ? 'bg-cyber-accent text-white'
                       : 'hover:bg-accent text-foreground'
                   }`}
+                  aria-current={currentPath === '/awareness' ? 'page' : undefined}
                 >
                   <BookOpen className="w-4 h-4" />
-                  <span className="font-medium">Awareness</span>
+                  <span>Awareness</span>
                 </button>
               </nav>
 
               {/* Mobile Menu Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="md:hidden p-2 hover:bg-accent rounded-lg"
+                className="md:hidden p-2 hover:bg-accent rounded-lg transition-colors"
+                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={mobileMenuOpen}
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
 
             {/* Mobile Navigation */}
             {mobileMenuOpen && (
-              <nav className="md:hidden mt-4 flex flex-col gap-2 pb-2">
+              <nav className="md:hidden mt-4 flex flex-col gap-2 pb-2 border-t border-border/50 pt-4" aria-label="Mobile navigation">
                 <button
                   onClick={() => {
                     navigate({ to: '/' });
                     setMobileMenuOpen(false);
                   }}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  className={`nav-button flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                     currentPath === '/'
-                      ? 'bg-[oklch(0.7_0.25_145)] text-white'
+                      ? 'bg-cyber-accent text-white'
                       : 'hover:bg-accent text-foreground'
                   }`}
+                  aria-current={currentPath === '/' ? 'page' : undefined}
                 >
                   <Shield className="w-4 h-4" />
-                  <span className="font-medium">Dashboard</span>
+                  <span>Dashboard</span>
                 </button>
                 <button
                   onClick={() => {
                     navigate({ to: '/awareness' });
                     setMobileMenuOpen(false);
                   }}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                  className={`nav-button flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors ${
                     currentPath === '/awareness'
-                      ? 'bg-[oklch(0.7_0.25_145)] text-white'
+                      ? 'bg-cyber-accent text-white'
                       : 'hover:bg-accent text-foreground'
                   }`}
+                  aria-current={currentPath === '/awareness' ? 'page' : undefined}
                 >
                   <BookOpen className="w-4 h-4" />
-                  <span className="font-medium">Awareness</span>
+                  <span>Awareness</span>
                 </button>
               </nav>
             )}
@@ -116,7 +131,7 @@ export default function Layout() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t border-border/50 backdrop-blur-xl mt-16" style={{ backgroundColor: 'oklch(0.205 0 0 / 0.3)' }}>
+        <footer className="border-t border-border/50 mt-16">
           <div className="container mx-auto px-4 py-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <p className="text-sm text-muted-foreground">
@@ -130,7 +145,7 @@ export default function Layout() {
                   )}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[oklch(0.7_0.25_145)] hover:underline"
+                  className="text-cyber-accent hover:underline transition-colors"
                 >
                   caffeine.ai
                 </a>

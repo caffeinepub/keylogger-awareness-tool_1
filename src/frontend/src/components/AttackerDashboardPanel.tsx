@@ -3,9 +3,24 @@ import InContextWarning from './InContextWarning';
 import ModuleInfoPopover from './ModuleInfoPopover';
 import TransmissionAnimation from './TransmissionAnimation';
 import { useSimulationState } from '../hooks/useSimulationState';
+import { sanitizeDisplayText } from '@/lib/inputSanitizer';
+import { useMemo } from 'react';
 
 export default function AttackerDashboardPanel() {
   const { capturedStream, demoInput, settings } = useSimulationState();
+
+  const sanitizedKeystrokes = useMemo(
+    () => capturedStream.map(event => ({
+      ...event,
+      key: sanitizeDisplayText(event.key),
+    })),
+    [capturedStream]
+  );
+
+  const sanitizedDemoInput = useMemo(
+    () => sanitizeDisplayText(demoInput),
+    [demoInput]
+  );
 
   return (
     <div className="glass-panel p-6 rounded-xl border border-[oklch(0.65_0.25_0)]/50 relative overflow-hidden bg-[oklch(0.65_0.25_0)]/5">
@@ -33,11 +48,11 @@ export default function AttackerDashboardPanel() {
               <span className="text-sm font-medium">Captured Stream</span>
             </div>
             <div className="h-32 overflow-y-auto bg-black/30 rounded p-3 font-mono text-xs">
-              {capturedStream.length === 0 ? (
+              {sanitizedKeystrokes.length === 0 ? (
                 <span className="text-muted-foreground">Waiting for input...</span>
               ) : (
                 <div className="space-y-1">
-                  {capturedStream.slice(-20).map((event, idx) => (
+                  {sanitizedKeystrokes.slice(-20).map((event, idx) => (
                     <div key={idx} className="text-[oklch(0.7_0.25_145)]">
                       [{new Date(event.timestamp).toLocaleTimeString()}] Key: {event.key}
                     </div>
@@ -50,7 +65,7 @@ export default function AttackerDashboardPanel() {
           <div className="bg-background/50 border border-border rounded-lg p-4">
             <span className="text-sm font-medium block mb-2">Reconstructed Text</span>
             <div className="bg-black/30 rounded p-3 font-mono text-sm text-[oklch(0.65_0.25_0)] min-h-[60px]">
-              {demoInput || <span className="text-muted-foreground">No data captured yet</span>}
+              {sanitizedDemoInput || <span className="text-muted-foreground">No data captured yet</span>}
             </div>
           </div>
 

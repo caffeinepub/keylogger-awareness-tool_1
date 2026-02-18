@@ -16,7 +16,7 @@ export default function AttackSimulationTimeline() {
   return (
     <div className="glass-panel p-6 rounded-xl border border-border/50">
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-semibold">Attack Simulation Timeline</h3>
+        <h3 className="text-xl font-semibold">Attack Simulation Timeline</h3>
         <ModuleInfoPopover
           title="Attack Timeline"
           description="This timeline shows the typical stages of a keylogger attack from initial capture to detection and blocking. All stages are simulated locally."
@@ -28,7 +28,7 @@ export default function AttackSimulationTimeline() {
         {/* Timeline line */}
         <div className="absolute top-6 left-0 right-0 h-0.5 bg-border" />
         <div
-          className="absolute top-6 left-0 h-0.5 bg-[oklch(0.7_0.25_145)] transition-all duration-500"
+          className="absolute top-6 left-0 h-0.5 bg-cyber-accent transition-all duration-500 timeline-progress"
           style={{ width: `${(timelineStage / 5) * 100}%` }}
         />
 
@@ -41,9 +41,9 @@ export default function AttackSimulationTimeline() {
             return (
               <div key={idx} className="flex flex-col items-center">
                 <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 ${
+                  className={`w-12 h-12 rounded-full flex items-center justify-center border-2 transition-all duration-300 timeline-stage ${
                     isActive
-                      ? 'bg-[oklch(0.7_0.25_145)] border-[oklch(0.7_0.25_145)] text-white scale-110'
+                      ? 'bg-cyber-accent border-cyber-accent text-white scale-110 shadow-glow-accent'
                       : 'bg-background border-border text-muted-foreground'
                   }`}
                 >

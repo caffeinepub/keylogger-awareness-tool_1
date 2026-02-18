@@ -10,6 +10,8 @@ export default function AdminDemoModeToggle() {
       <button
         onClick={toggleAdminMode}
         className="flex items-center gap-2 px-4 py-2 bg-accent hover:bg-accent/80 rounded-lg transition-colors"
+        aria-label={adminDemoModeEnabled ? 'Hide attacker view' : 'Show attacker view'}
+        aria-pressed={adminDemoModeEnabled}
       >
         {adminDemoModeEnabled ? (
           <>

@@ -26,16 +26,23 @@ export default function SimulatedKeyloggerModule() {
         <InContextWarning message="This is a simulation for educational purposes only. Type in the box below to see how a keylogger might capture input." />
 
         <div className="mt-4">
-          <label className="block text-sm font-medium mb-2">Type here to simulate capture:</label>
+          <label className="block text-sm font-medium mb-2" htmlFor="demo-input">
+            Type here to simulate capture:
+          </label>
           <textarea
+            id="demo-input"
             value={demoInput}
             onChange={(e) => setDemoInput(e.target.value)}
             disabled={isBlocked}
             placeholder="Start typing to see the simulation in action..."
             className="w-full h-32 px-4 py-3 bg-background/50 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-[oklch(0.7_0.25_145)] disabled:opacity-50 disabled:cursor-not-allowed resize-none"
+            aria-describedby="input-warning"
           />
+          <p id="input-warning" className="sr-only">
+            This is a simulation. Your input is processed locally and never sent to any server.
+          </p>
           {isBlocked && (
-            <p className="mt-2 text-sm text-[oklch(0.65_0.25_0)] font-medium">
+            <p className="mt-2 text-sm text-[oklch(0.65_0.25_0)] font-medium" role="alert">
               ⚠️ Input blocked due to high-risk detection
             </p>
           )}

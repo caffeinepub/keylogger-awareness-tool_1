@@ -23,31 +23,47 @@ export default function ScenarioQuizModal({
 
   useEffect(() => {
     if (isOpen) {
-      // Store the currently focused element
       previousFocusRef.current = document.activeElement as HTMLElement;
       
-      // Focus the close button when modal opens
       setTimeout(() => {
         closeButtonRef.current?.focus();
       }, 100);
 
-      // Prevent body scroll
       document.body.style.overflow = 'hidden';
 
-      // Handle Escape key
       const handleEscape = (e: KeyboardEvent) => {
         if (e.key === 'Escape') {
           onClose();
         }
       };
+      
+      const handleTab = (e: KeyboardEvent) => {
+        if (e.key === 'Tab' && modalRef.current) {
+          const focusableElements = modalRef.current.querySelectorAll(
+            'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+          );
+          const firstElement = focusableElements[0] as HTMLElement;
+          const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
+
+          if (e.shiftKey && document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          } else if (!e.shiftKey && document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      };
+
       document.addEventListener('keydown', handleEscape);
+      document.addEventListener('keydown', handleTab);
 
       return () => {
         document.removeEventListener('keydown', handleEscape);
+        document.removeEventListener('keydown', handleTab);
         document.body.style.overflow = '';
       };
     } else {
-      // Restore focus when modal closes
       if (previousFocusRef.current) {
         previousFocusRef.current.focus();
       }
@@ -67,6 +83,7 @@ export default function ScenarioQuizModal({
           role="dialog"
           aria-modal="true"
           aria-labelledby="quiz-modal-title"
+          data-testid="scenario-quiz-modal"
         >
           <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-background border-b border-border">
             <h2 id="quiz-modal-title" className="text-xl font-bold">
@@ -79,6 +96,7 @@ export default function ScenarioQuizModal({
               size="icon"
               className="rounded-full"
               aria-label="Close quiz"
+              data-testid="quiz-modal-close"
             >
               <X className="w-5 h-5" />
             </Button>
@@ -101,8 +119,8 @@ export default function ScenarioQuizModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="quiz-modal-title"
+        data-testid="scenario-quiz-modal"
       >
-        {/* Header */}
         <div className="sticky top-0 z-10 flex items-center justify-between p-6 bg-background border-b border-border">
           <h2 id="quiz-modal-title" className="text-xl font-bold">
             {scenarioName} Quiz
@@ -114,18 +132,19 @@ export default function ScenarioQuizModal({
             size="icon"
             className="rounded-full"
             aria-label="Close quiz"
+            data-testid="quiz-modal-close"
           >
             <X className="w-5 h-5" />
           </Button>
         </div>
 
-        {/* Quiz Content */}
         <div className="p-6">
           <ScenarioQuiz
             quiz={quiz}
             onRetry={() => {
               // Quiz component handles its own retry state
             }}
+            onClose={onClose}
           />
         </div>
       </div>

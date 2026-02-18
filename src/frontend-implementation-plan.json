@@ -1,48 +1,242 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add real-world public/shared computer login scenario to Run Scenario workflow",
+  "title": "Security audit and bug fixes",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Add a new real-world keylogger-awareness scenario to the existing Test Scenarios panel with working Run Scenario, learning content, and quiz support.",
+      "summary": "Review and fix authentication security vulnerabilities in the Internet Identity integration, including session management, token validation, and secure logout flow",
       "acceptanceCriteria": [
-        "A new scenario appears in the existing Test Scenarios list (frontend/src/components/TestScenariosPanel.tsx) with a name, short description, and expected outcome.",
-        "Clicking “Run Scenario” on the new scenario triggers the existing runScenario flow (frontend/src/hooks/useSimulationState.ts) and visibly plays back the scenario text into the simulation input (no manual typing required).",
-        "The scenario has associated learning content returned by getScenarioContent (frontend/src/lib/scenarioLearningContent.ts) and it renders correctly in the collapsible learning-content section.",
-        "The scenario has an associated quiz entry (frontend/src/lib/scenarioQuizzes.ts) and clicking “Take Test” opens the quiz modal for that scenario without errors."
+        "Identity tokens are properly validated before use",
+        "Session expiration is handled securely",
+        "Logout clears all authentication state completely"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/TestScenariosPanel.tsx",
+          "path": "frontend/src/hooks/useActor.ts",
           "operation": "modify",
-          "description": "Add a new scenario entry (e.g., id like \"public-shared-computer-login\") to the existing scenarios array with name, short description, and Expected label so it appears in the current Test Scenarios grid. This will continue to use existing shadcn-ui Button and Collapsible compositions for learning content and actions. Verify the component's usage instructions before implementing."
+          "description": "Add identity token validation before actor creation to ensure tokens are valid and not expired. Add null checks and error handling for invalid identity states. Ensure actor is not created with stale or invalid credentials."
         },
         {
-          "path": "frontend/src/lib/scenarioLearningContent.ts",
+          "path": "frontend/src/main.tsx",
           "operation": "modify",
-          "description": "Add a ScenarioContent entry keyed by the new scenario id, with a defensive, awareness-focused title and content tailored to a public/shared computer login context so getScenarioContent returns it and the existing collapsible section renders it."
+          "description": "Add session expiration monitoring in the React Query provider setup. Implement automatic session cleanup when identity expires. Ensure query cache is cleared on logout."
         },
         {
-          "path": "frontend/src/lib/scenarioQuizzes.ts",
+          "path": "frontend/src/pages/DashboardPage.tsx",
           "operation": "modify",
-          "description": "Add a ScenarioQuiz entry keyed by the new scenario id (5 questions) so getScenarioQuiz can supply quiz content and ScenarioQuizModal opens without errors when \"Take Test\" is clicked."
+          "description": "Add authentication state checks before rendering sensitive simulation components. Ensure dashboard only displays when user has valid session. Add session expiration handling with user notification."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Provide educational, privacy-safe preset text for the new scenario that still produces a meaningful risk/auto-block outcome when run.",
+      "summary": "Audit and fix XSS vulnerabilities in user input handling, particularly in the SimulatedKeyloggerModule where keystrokes are captured and displayed",
       "acceptanceCriteria": [
-        "The new scenario’s preset text is included in the runScenario mapping in frontend/src/hooks/useSimulationState.ts.",
-        "The preset text does not include real-looking secrets (e.g., actual credit card/SSN formats) and stays in a defensive/awareness tone.",
-        "Running the scenario produces a non-trivial outcome in the simulation (e.g., Medium/High risk or auto-block if enabled), consistent with the scenario’s “Expected” label shown in the UI."
+        "All user input is properly sanitized before rendering",
+        "No innerHTML usage with unsanitized content",
+        "Special characters are escaped in keystroke display"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/SimulatedKeyloggerModule.tsx",
+          "operation": "modify",
+          "description": "Replace any innerHTML usage with textContent or React's JSX rendering. Add input sanitization for keystroke capture before storing in state. Escape special characters (< > & \" ') in all displayed keystroke text. Validate input against XSS patterns before processing."
+        },
+        {
+          "path": "frontend/src/components/AttackerDashboardPanel.tsx",
+          "operation": "modify",
+          "description": "Sanitize captured keystrokes and reconstructed text before rendering in the attacker view. Use React's automatic XSS protection by rendering text content through JSX variables rather than dangerouslySetInnerHTML. Add escaping for special characters in keystroke display."
+        },
+        {
+          "path": "frontend/src/hooks/useSimulationState.ts",
+          "operation": "modify",
+          "description": "Add input validation and sanitization in keystroke capture actions. Validate that keystroke data contains only safe characters before storing. Strip or escape HTML tags and script content from any captured input."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Fix localStorage security issues by encrypting sensitive data and implementing proper data validation on read operations in useSimulationState and useAppearancePreferences hooks",
+      "acceptanceCriteria": [
+        "Sensitive simulation state is encrypted before localStorage storage",
+        "Data read from localStorage is validated and sanitized",
+        "Corrupted localStorage data does not crash the application"
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useSimulationState.ts",
           "operation": "modify",
-          "description": "Extend the existing runScenario scenarios mapping with the new scenario id and preset playback text that is realistic but privacy-safe (no real credentials), using password-like patterns/keywords to reliably trigger Medium/High risk and (if enabled) auto-block during the existing character-by-character playback flow."
+          "description": "Add encryption wrapper for localStorage persistence of keystroke data using Web Crypto API. Implement try-catch blocks around localStorage read operations with fallback to default state. Validate data structure and types after reading from localStorage before using in state. Add schema validation to ensure stored data matches expected format."
+        },
+        {
+          "path": "frontend/src/hooks/useAppearancePreferences.ts",
+          "operation": "modify",
+          "description": "Add validation for localStorage reads with type checking and fallback to defaults. Wrap localStorage operations in try-catch to handle corrupted data gracefully. Validate that stored preference values are within allowed ranges before applying to state."
+        },
+        {
+          "path": "frontend/src/lib/storageEncryption.ts",
+          "operation": "create",
+          "description": "Create utility module providing encrypt and decrypt functions using Web Crypto API for localStorage data. Export functions for encrypting sensitive simulation data before storage and decrypting on read. Include error handling for encryption failures."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Review and fix potential state manipulation vulnerabilities in the Zustand store by adding input validation to all state update actions in useSimulationState",
+      "acceptanceCriteria": [
+        "All state updates validate input types and ranges",
+        "Invalid state updates are rejected with error logging",
+        "State cannot be manipulated to invalid values through the store actions"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useSimulationState.ts",
+          "operation": "modify",
+          "description": "Add input validation to all Zustand store actions. Validate types, ranges, and allowed values for keystroke counts, risk levels, scanner states, and settings. Add bounds checking for numeric values (e.g., risk percentage 0-100, keystroke count >= 0). Reject invalid updates with console error logging. Add validation helpers for each state property type."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Fix accessibility issues including missing ARIA labels, keyboard navigation bugs, and focus management problems in modal components",
+      "acceptanceCriteria": [
+        "All interactive elements have proper ARIA labels",
+        "Keyboard navigation works correctly through all UI components",
+        "Focus is trapped and managed properly in modals",
+        "Screen reader announcements are present for state changes"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ScenarioQuizModal.tsx",
+          "operation": "modify",
+          "description": "Add focus trap implementation to prevent focus from leaving modal while open. Add ARIA labels for modal role, title, and description. Implement proper focus management: move focus to modal on open, return focus to trigger on close. Add keyboard event handlers for Escape key. Add aria-live regions for quiz state changes."
+        },
+        {
+          "path": "frontend/src/components/OnboardingOverlay.tsx",
+          "operation": "modify",
+          "description": "Implement focus trap for onboarding modal. Add ARIA labels for navigation buttons, step indicators, and close button. Add keyboard navigation support for stepping through onboarding slides. Ensure focus moves to first interactive element on modal open. Add aria-live announcements for step transitions."
+        },
+        {
+          "path": "frontend/src/components/AdminDemoModeToggle.tsx",
+          "operation": "modify",
+          "description": "Add ARIA label to toggle button describing current state and action. Add keyboard support for Space and Enter keys. Ensure focus styles are visible. Add aria-pressed attribute to indicate toggle state."
+        },
+        {
+          "path": "frontend/src/components/SimulatedKeyloggerModule.tsx",
+          "operation": "modify",
+          "description": "Add ARIA labels to input field describing its purpose and security warnings. Add aria-describedby linking to warning messages. Add keyboard-accessible controls for reset and clear actions. Ensure screen reader announces when input is blocked."
+        },
+        {
+          "path": "frontend/src/components/TestScenariosPanel.tsx",
+          "operation": "modify",
+          "description": "Add ARIA labels to scenario buttons and expandable sections. Implement keyboard navigation for scenario selection. Add aria-expanded attributes for collapsible content. Ensure focus management when opening quiz modals."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Review and fix race conditions in React Query cache invalidation and actor recreation logic in useActor hook when identity changes",
+      "acceptanceCriteria": [
+        "Actor recreation completes before dependent queries execute",
+        "No stale actor instances are used after identity change",
+        "Cache invalidation happens in the correct order"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Add synchronization to ensure actor recreation completes before query invalidation. Use queryClient.cancelQueries before invalidation to prevent race conditions. Add identity version tracking to detect stale actor instances. Implement proper cleanup of old actor references before creating new ones. Add abort controller to cancel in-flight requests when identity changes."
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add query dependency on actor instance to ensure queries refetch when actor changes. Implement proper stale time and cache time settings to prevent using outdated actor references. Add enabled flags tied to actor readiness state."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Fix error boundary implementation to properly catch and handle runtime errors throughout the application, preventing white screen crashes",
+      "acceptanceCriteria": [
+        "Error boundaries are present at key component tree levels",
+        "Errors are logged for debugging",
+        "Users see a helpful error message instead of blank screen",
+        "Application can recover from non-fatal errors"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ErrorBoundary.tsx",
+          "operation": "create",
+          "description": "Create a React error boundary component that catches rendering errors, logs them to console, and displays a user-friendly error UI. Implement componentDidCatch for error logging and getDerivedStateFromError for UI fallback. Include a reset button to attempt recovery. Add error details display in development mode only."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wrap the router and main application tree with the ErrorBoundary component to catch top-level errors. Add nested error boundaries around complex simulation components. Ensure error boundary placement prevents full app crashes."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Add error boundary around simulation panels to isolate component failures. Wrap keylogger module, scanner, and attacker dashboard in separate error boundaries. Add error recovery actions that reset local state on error."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Audit and fix memory leaks from animation loops, event listeners, and canvas operations in ThreatMeter3D, AnimatedInfographics, and ThreeSceneAccent components",
+      "acceptanceCriteria": [
+        "All animation loops are properly cleaned up on unmount",
+        "Event listeners are removed when components unmount",
+        "Canvas contexts are properly disposed",
+        "No memory leaks detected in long-running sessions"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ThreatMeter3D.tsx",
+          "operation": "modify",
+          "description": "Add cleanup function in useEffect to cancel animation frames on unmount. Clear canvas context and remove event listeners. Ensure requestAnimationFrame loop is properly terminated. Add null checks before accessing canvas context."
+        },
+        {
+          "path": "frontend/src/components/AnimatedInfographics.tsx",
+          "operation": "modify",
+          "description": "Implement proper cleanup of canvas animation loops in useEffect return function. Cancel all requestAnimationFrame calls on component unmount. Remove resize event listeners. Dispose of canvas context and clear references."
+        },
+        {
+          "path": "frontend/src/components/ThreeSceneAccent.tsx",
+          "operation": "modify",
+          "description": "Add Three.js scene cleanup in useEffect return function. Dispose of geometries, materials, and renderer. Remove event listeners for resize and pointer events. Clean up orbit controls. Ensure animation loop is stopped on unmount."
+        },
+        {
+          "path": "frontend/src/components/TransmissionAnimation.tsx",
+          "operation": "modify",
+          "description": "Add cleanup for any animation intervals or timeouts in useEffect return. Ensure animation state is reset on unmount. Remove any event listeners attached during animation lifecycle."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Fix potential infinite loop and performance issues in simulation state calculations, particularly in the auto-blocking trigger logic",
+      "acceptanceCriteria": [
+        "State update loops are prevented with proper dependencies",
+        "Risk calculations do not trigger excessive re-renders",
+        "Auto-blocking logic executes efficiently without performance degradation"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useSimulationState.ts",
+          "operation": "modify",
+          "description": "Review and fix useEffect dependencies in auto-blocking logic to prevent infinite loops. Add early return guards to prevent redundant state updates. Memoize risk calculation functions to avoid recomputation on every render. Add debouncing to risk level updates to prevent rapid state changes. Ensure state updates only trigger when values actually change."
+        },
+        {
+          "path": "frontend/src/components/AIRiskDetectorPanel.tsx",
+          "operation": "modify",
+          "description": "Memoize expensive calculations using useMemo. Prevent re-renders of risk visualization when values haven't changed. Add React.memo wrapper if component receives same props frequently. Optimize risk level change detection to avoid unnecessary updates."
+        },
+        {
+          "path": "frontend/src/pages/DashboardPage.tsx",
+          "operation": "modify",
+          "description": "Add React.memo to expensive child components. Use useCallback for event handlers passed to simulation components. Prevent unnecessary re-renders by splitting state into smaller slices. Add performance monitoring for simulation state updates."
         }
       ]
     }

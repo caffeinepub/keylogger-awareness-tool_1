@@ -1,10 +1,17 @@
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Mesh } from 'three';
 
 function RotatingRing() {
   const meshRef = useRef<Mesh>(null);
+
+  useFrame((state) => {
+    if (meshRef.current) {
+      meshRef.current.rotation.x = state.clock.getElapsedTime() * 0.2;
+      meshRef.current.rotation.y = state.clock.getElapsedTime() * 0.3;
+    }
+  });
 
   return (
     <mesh ref={meshRef} rotation={[Math.PI / 4, 0, 0]}>
@@ -15,8 +22,28 @@ function RotatingRing() {
 }
 
 export default function ThreeSceneAccent() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    return () => {
+      // Cleanup Three.js resources
+      if (containerRef.current) {
+        const canvas = containerRef.current.querySelector('canvas');
+        if (canvas) {
+          const gl = canvas.getContext('webgl') || canvas.getContext('webgl2');
+          if (gl) {
+            const loseContext = gl.getExtension('WEBGL_lose_context');
+            if (loseContext) {
+              loseContext.loseContext();
+            }
+          }
+        }
+      }
+    };
+  }, []);
+
   return (
-    <div className="w-full h-64 opacity-30">
+    <div ref={containerRef} className="w-full h-64 opacity-30">
       <Canvas camera={{ position: [0, 0, 3] }}>
         <ambientLight intensity={0.5} />
         <pointLight position={[10, 10, 10]} />

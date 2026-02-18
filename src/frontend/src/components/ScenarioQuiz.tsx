@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import { Button } from './ui/button';
-import { CheckCircle2, XCircle, RotateCcw } from 'lucide-react';
+import { CheckCircle2, XCircle, RotateCcw, X } from 'lucide-react';
 import type { ScenarioQuiz } from '../lib/scenarioQuizzes';
 
 interface ScenarioQuizProps {
   quiz: ScenarioQuiz;
   onRetry: () => void;
+  onClose?: () => void;
 }
 
-export default function ScenarioQuiz({ quiz, onRetry }: ScenarioQuizProps) {
+export default function ScenarioQuiz({ quiz, onRetry, onClose }: ScenarioQuizProps) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>(
     new Array(quiz.questions.length).fill(null)
@@ -102,10 +103,45 @@ export default function ScenarioQuiz({ quiz, onRetry }: ScenarioQuizProps) {
           })}
         </div>
 
-        <Button onClick={handleRetry} className="w-full" size="lg">
-          <RotateCcw className="w-4 h-4 mr-2" />
-          Retry Quiz
-        </Button>
+        {/* Closing Summary Section */}
+        <div className="p-5 bg-[oklch(0.7_0.25_145)]/10 rounded-lg border-2 border-[oklch(0.7_0.25_145)]/30">
+          <h4 className="font-bold text-base mb-3 text-[oklch(0.7_0.25_145)]">Closing Summary</h4>
+          <div className="space-y-3 text-sm text-foreground/90">
+            <p>
+              <strong>Great work completing this quiz!</strong> Understanding keylogger threats is an essential step in protecting your digital privacy and security.
+            </p>
+            <p>
+              Remember: This simulation is designed purely for educational purposes. Real keyloggers are serious threats that can compromise sensitive information. Always practice safe computing habits:
+            </p>
+            <ul className="list-disc list-inside space-y-1 ml-2 text-xs">
+              <li>Use trusted devices for sensitive activities</li>
+              <li>Keep your software and antivirus up to date</li>
+              <li>Be cautious on public or shared computers</li>
+              <li>Enable two-factor authentication whenever possible</li>
+              <li>Monitor your accounts for suspicious activity</li>
+            </ul>
+            <p className="text-xs text-muted-foreground italic mt-3">
+              Stay vigilant, stay informed, and continue learning about cybersecurity best practices to keep yourself and your data safe.
+            </p>
+          </div>
+        </div>
+
+        {/* Next Steps Actions */}
+        <div className="space-y-2">
+          <p className="text-sm font-semibold text-muted-foreground">Next Steps:</p>
+          <div className="flex flex-col gap-2">
+            <Button onClick={handleRetry} className="w-full" size="lg" variant="outline">
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Retry Quiz
+            </Button>
+            {onClose && (
+              <Button onClick={onClose} className="w-full" size="lg" variant="secondary">
+                <X className="w-4 h-4 mr-2" />
+                Close
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
     );
   }

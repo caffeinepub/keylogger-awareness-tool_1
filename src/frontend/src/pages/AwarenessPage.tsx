@@ -4,11 +4,15 @@ import AnimatedInfographics from '../components/AnimatedInfographics';
 
 export default function AwarenessPage() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-12" data-testid="awareness-page">
       {/* Hero Section */}
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold">Keylogger Awareness & Prevention</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+      <div className="text-center space-y-4 py-8">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyber-accent/10 border border-cyber-accent/30 mb-4">
+          <Shield className="w-4 h-4 text-cyber-accent" />
+          <span className="text-sm font-medium text-cyber-accent">Security Education</span>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-bold">Keylogger Awareness & Prevention</h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
           Learn about keyloggers, how they work, and most importantly, how to protect yourself from them.
         </p>
       </div>
@@ -16,146 +20,126 @@ export default function AwarenessPage() {
       {/* What is a Keylogger */}
       <section className="glass-panel p-8 rounded-xl border border-border/50">
         <div className="flex items-center gap-3 mb-6">
-          <Shield className="w-8 h-8 text-[oklch(0.7_0.25_145)]" />
-          <h2 className="text-2xl font-bold">What is a Keylogger?</h2>
+          <Shield className="w-8 h-8 text-cyber-accent" />
+          <h2 className="text-3xl font-bold">What is a Keylogger?</h2>
         </div>
-        <div className="prose prose-invert max-w-none">
-          <p className="text-muted-foreground leading-relaxed">
-            A keylogger is a type of surveillance technology used to monitor and record each keystroke typed on a
-            specific computer's keyboard. While keyloggers can be used for legitimate purposes like parental monitoring
-            or employee oversight, they are often deployed maliciously to steal sensitive information such as passwords,
-            credit card numbers, and personal messages.
+        <div className="space-y-4 text-muted-foreground leading-relaxed">
+          <p>
+            A keylogger is a type of surveillance technology used to monitor and record each keystroke typed on a specific computer's keyboard. 
+            While keyloggers can be used for legitimate purposes like parental monitoring or employee oversight, they are often deployed maliciously 
+            to steal sensitive information such as passwords, credit card numbers, and personal messages.
           </p>
-          <p className="text-muted-foreground leading-relaxed mt-4">
-            Keyloggers can be either software-based programs or hardware devices. They operate silently in the
-            background, making them difficult to detect without proper security measures.
+          <p>
+            Keyloggers can be either software-based (installed as programs or malware) or hardware-based (physical devices attached to keyboards). 
+            They operate silently in the background, making them difficult to detect without proper security measures.
           </p>
         </div>
       </section>
 
       {/* Types of Keyloggers */}
-      <section className="glass-panel p-8 rounded-xl border border-border/50">
-        <h2 className="text-2xl font-bold mb-6">Types of Keyloggers</h2>
-        
+      <section className="glass-panel p-8 rounded-xl border border-border/50 relative overflow-hidden">
         <AnimatedInfographics />
-
-        <div className="grid md:grid-cols-3 gap-6 mt-8">
-          <div className="p-6 bg-background/50 border border-border rounded-lg">
-            <HardDrive className="w-10 h-10 text-[oklch(0.7_0.25_145)] mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Hardware Keyloggers</h3>
-            <p className="text-sm text-muted-foreground">
-              Physical devices attached between the keyboard and computer. They can be USB dongles, keyboard overlays,
-              or even modified keyboards. These are harder to detect via software but require physical access.
-            </p>
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 mb-6">
+            <Code className="w-8 h-8 text-cyber-accent" />
+            <h2 className="text-3xl font-bold">Types of Keyloggers</h2>
           </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="glass-card-subtle p-6 rounded-xl border border-border/50">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-lg bg-cyber-accent/10 flex items-center justify-center">
+                  <HardDrive className="w-6 h-6 text-cyber-accent" />
+                </div>
+                <h3 className="text-xl font-semibold">Hardware Keyloggers</h3>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Physical devices that connect between a keyboard and computer. They can be USB dongles, keyboard overlays, 
+                or even modified keyboards. These are harder to detect through software but require physical access to install.
+              </p>
+            </div>
 
-          <div className="p-6 bg-background/50 border border-border rounded-lg">
-            <Code className="w-10 h-10 text-[oklch(0.75_0.20_85)] mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Software Keyloggers</h3>
-            <p className="text-sm text-muted-foreground">
-              Programs installed on the operating system that monitor keyboard input. They can be delivered through
-              malware, phishing emails, or malicious downloads. Most common type encountered by users.
-            </p>
-          </div>
-
-          <div className="p-6 bg-background/50 border border-border rounded-lg">
-            <Cpu className="w-10 h-10 text-[oklch(0.65_0.25_0)] mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Kernel-based Keyloggers</h3>
-            <p className="text-sm text-muted-foreground">
-              Advanced software that operates at the kernel level of the operating system. These are extremely difficult
-              to detect and remove, often requiring specialized security tools or system reinstallation.
-            </p>
+            <div className="glass-card-subtle p-6 rounded-xl border border-border/50">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-lg bg-cyber-accent/10 flex items-center justify-center">
+                  <Cpu className="w-6 h-6 text-cyber-accent" />
+                </div>
+                <h3 className="text-xl font-semibold">Software Keyloggers</h3>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                Programs installed on a computer that monitor keyboard input. They can be standalone applications, 
+                browser extensions, or embedded in other malware. These are more common and can be installed remotely.
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Prevention Tips */}
+      {/* How to Protect Yourself */}
       <section className="glass-panel p-8 rounded-xl border border-border/50">
         <div className="flex items-center gap-3 mb-6">
-          <Lock className="w-8 h-8 text-[oklch(0.7_0.25_145)]" />
-          <h2 className="text-2xl font-bold">How to Prevent Keyloggers</h2>
+          <Lock className="w-8 h-8 text-cyber-accent" />
+          <h2 className="text-3xl font-bold">How to Protect Yourself</h2>
         </div>
-
         <div className="grid md:grid-cols-2 gap-6">
           <div className="space-y-4">
-            <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.25_145)]/10 border border-[oklch(0.7_0.25_145)]/30 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-[oklch(0.7_0.25_145)] flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg border border-border/50 hover:border-cyber-accent/50 transition-all">
+              <CheckCircle className="w-5 h-5 text-cyber-accent flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold mb-1">Use Reputable Antivirus Software</h4>
+                <h4 className="font-semibold mb-1">Use Antivirus Software</h4>
                 <p className="text-sm text-muted-foreground">
-                  Install and maintain up-to-date antivirus software with real-time protection enabled.
+                  Keep your antivirus software updated and run regular scans to detect and remove keyloggers.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.25_145)]/10 border border-[oklch(0.7_0.25_145)]/30 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-[oklch(0.7_0.25_145)] flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg border border-border/50 hover:border-cyber-accent/50 transition-all">
+              <CheckCircle className="w-5 h-5 text-cyber-accent flex-shrink-0 mt-0.5" />
               <div>
                 <h4 className="font-semibold mb-1">Enable Two-Factor Authentication</h4>
                 <p className="text-sm text-muted-foreground">
-                  Add an extra layer of security to your accounts so stolen passwords alone aren't enough.
+                  Even if passwords are stolen, 2FA provides an additional layer of security.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.25_145)]/10 border border-[oklch(0.7_0.25_145)]/30 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-[oklch(0.7_0.25_145)] flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg border border-border/50 hover:border-cyber-accent/50 transition-all">
+              <CheckCircle className="w-5 h-5 text-cyber-accent flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold mb-1">Keep Software Updated</h4>
+                <h4 className="font-semibold mb-1">Use Password Managers</h4>
                 <p className="text-sm text-muted-foreground">
-                  Regularly update your operating system and applications to patch security vulnerabilities.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.25_145)]/10 border border-[oklch(0.7_0.25_145)]/30 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-[oklch(0.7_0.25_145)] flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-semibold mb-1">Be Cautious with Downloads</h4>
-                <p className="text-sm text-muted-foreground">
-                  Only download software from trusted sources and avoid clicking suspicious email attachments.
+                  Password managers can auto-fill credentials, bypassing keyboard input entirely.
                 </p>
               </div>
             </div>
           </div>
 
           <div className="space-y-4">
-            <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.25_145)]/10 border border-[oklch(0.7_0.25_145)]/30 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-[oklch(0.7_0.25_145)] flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg border border-border/50 hover:border-cyber-accent/50 transition-all">
+              <CheckCircle className="w-5 h-5 text-cyber-accent flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold mb-1">Use Virtual Keyboards</h4>
+                <h4 className="font-semibold mb-1">Be Cautious on Public Computers</h4>
                 <p className="text-sm text-muted-foreground">
-                  For sensitive data entry, consider using on-screen keyboards that bypass physical keystrokes.
+                  Avoid entering sensitive information on shared or public computers.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.25_145)]/10 border border-[oklch(0.7_0.25_145)]/30 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-[oklch(0.7_0.25_145)] flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg border border-border/50 hover:border-cyber-accent/50 transition-all">
+              <CheckCircle className="w-5 h-5 text-cyber-accent flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold mb-1">Monitor System Behavior</h4>
+                <h4 className="font-semibold mb-1">Keep Software Updated</h4>
                 <p className="text-sm text-muted-foreground">
-                  Watch for unusual system slowdowns, unexpected network activity, or unknown processes.
+                  Regular updates patch security vulnerabilities that keyloggers might exploit.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.25_145)]/10 border border-[oklch(0.7_0.25_145)]/30 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-[oklch(0.7_0.25_145)] flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg border border-border/50 hover:border-cyber-accent/50 transition-all">
+              <CheckCircle className="w-5 h-5 text-cyber-accent flex-shrink-0 mt-0.5" />
               <div>
-                <h4 className="font-semibold mb-1">Check for Hardware Devices</h4>
+                <h4 className="font-semibold mb-1">Monitor System Activity</h4>
                 <p className="text-sm text-muted-foreground">
-                  Inspect USB ports and keyboard connections, especially on public or shared computers.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-3 p-4 bg-[oklch(0.7_0.25_145)]/10 border border-[oklch(0.7_0.25_145)]/30 rounded-lg">
-              <CheckCircle className="w-5 h-5 text-[oklch(0.7_0.25_145)] flex-shrink-0 mt-0.5" />
-              <div>
-                <h4 className="font-semibold mb-1">Use Password Managers</h4>
-                <p className="text-sm text-muted-foreground">
-                  Password managers can auto-fill credentials, reducing the need to type sensitive information.
+                  Watch for unusual processes, network activity, or system slowdowns.
                 </p>
               </div>
             </div>
@@ -163,62 +147,53 @@ export default function AwarenessPage() {
         </div>
       </section>
 
-      {/* Real-world Case Studies */}
+      {/* Warning Signs */}
       <section className="glass-panel p-8 rounded-xl border border-border/50">
         <div className="flex items-center gap-3 mb-6">
-          <Eye className="w-8 h-8 text-[oklch(0.75_0.20_85)]" />
-          <h2 className="text-2xl font-bold">Real-World Case Studies</h2>
+          <Eye className="w-8 h-8 text-cyber-accent" />
+          <h2 className="text-3xl font-bold">Warning Signs</h2>
         </div>
-
-        <div className="space-y-6">
-          <div className="p-6 bg-background/50 border border-border rounded-lg">
-            <div className="flex items-start gap-3 mb-3">
-              <AlertTriangle className="w-5 h-5 text-[oklch(0.65_0.25_0)] flex-shrink-0 mt-0.5" />
-              <h3 className="text-lg font-semibold">Corporate Espionage (2019)</h3>
+        <div className="grid md:grid-cols-3 gap-4">
+          <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg border border-border/50">
+            <AlertTriangle className="w-5 h-5 text-[oklch(0.75_0.20_85)] flex-shrink-0 mt-0.5" />
+            <div>
+              <h4 className="font-semibold text-sm mb-1">Slow Performance</h4>
+              <p className="text-xs text-muted-foreground">
+                Unexplained system slowdowns or lag when typing
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground mb-3">
-              A major corporation discovered keyloggers installed on executive computers, capturing sensitive business
-              strategies and financial data. The breach went undetected for months, resulting in significant
-              competitive disadvantage and financial losses.
-            </p>
-            <p className="text-xs text-[oklch(0.7_0.25_145)]">
-              Lesson: Regular security audits and employee training are essential for early detection.
-            </p>
           </div>
 
-          <div className="p-6 bg-background/50 border border-border rounded-lg">
-            <div className="flex items-start gap-3 mb-3">
-              <AlertTriangle className="w-5 h-5 text-[oklch(0.65_0.25_0)] flex-shrink-0 mt-0.5" />
-              <h3 className="text-lg font-semibold">Banking Trojan Campaign (2020)</h3>
+          <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg border border-border/50">
+            <AlertTriangle className="w-5 h-5 text-[oklch(0.75_0.20_85)] flex-shrink-0 mt-0.5" />
+            <div>
+              <h4 className="font-semibold text-sm mb-1">Unusual Network Activity</h4>
+              <p className="text-xs text-muted-foreground">
+                Unexpected data transfers or network connections
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground mb-3">
-              A widespread phishing campaign delivered keylogger malware disguised as legitimate software updates.
-              Thousands of users had their banking credentials stolen, leading to unauthorized transactions and identity
-              theft.
-            </p>
-            <p className="text-xs text-[oklch(0.7_0.25_145)]">
-              Lesson: Always verify software updates through official channels and use two-factor authentication.
-            </p>
           </div>
 
-          <div className="p-6 bg-background/50 border border-border rounded-lg">
-            <div className="flex items-start gap-3 mb-3">
-              <AlertTriangle className="w-5 h-5 text-[oklch(0.65_0.25_0)] flex-shrink-0 mt-0.5" />
-              <h3 className="text-lg font-semibold">Public Computer Attack (2021)</h3>
+          <div className="flex items-start gap-3 p-4 bg-background/50 rounded-lg border border-border/50">
+            <AlertTriangle className="w-5 h-5 text-[oklch(0.75_0.20_85)] flex-shrink-0 mt-0.5" />
+            <div>
+              <h4 className="font-semibold text-sm mb-1">Unknown Processes</h4>
+              <p className="text-xs text-muted-foreground">
+                Unfamiliar programs running in the background
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground mb-3">
-              Hardware keyloggers were discovered on public library computers, capturing login credentials and personal
-              information from unsuspecting users. The devices were small USB adapters easily overlooked.
-            </p>
-            <p className="text-xs text-[oklch(0.7_0.25_145)]">
-              Lesson: Always inspect public computers for suspicious hardware and avoid entering sensitive information.
-            </p>
           </div>
         </div>
       </section>
 
       {/* Quiz Section */}
-      <AwarenessQuiz />
+      <section className="glass-panel p-8 rounded-xl border border-border/50">
+        <div className="flex items-center gap-3 mb-6">
+          <Shield className="w-8 h-8 text-cyber-accent" />
+          <h2 className="text-3xl font-bold">Test Your Knowledge</h2>
+        </div>
+        <AwarenessQuiz />
+      </section>
     </div>
   );
 }

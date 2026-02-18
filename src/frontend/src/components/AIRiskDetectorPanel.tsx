@@ -7,9 +7,9 @@ export default function AIRiskDetectorPanel() {
   const { riskLevel, typingSpeed, patternScore } = useSimulationState();
 
   const riskColors = {
-    Low: 'oklch(0.7_0.25_145)',
-    Medium: 'oklch(0.75_0.20_85)',
-    High: 'oklch(0.65_0.25_0)',
+    Low: 'oklch(0.7 0.25 145)',
+    Medium: 'oklch(0.75 0.20 85)',
+    High: 'oklch(0.65 0.25 0)',
   };
 
   const riskPercentage = {
@@ -23,10 +23,10 @@ export default function AIRiskDetectorPanel() {
       <div className="absolute top-0 right-0 w-32 h-32 bg-[oklch(0.75_0.20_85)]/10 rounded-full blur-3xl" />
       
       <div className="relative">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
             <Brain className="w-5 h-5 text-[oklch(0.75_0.20_85)]" />
-            <h3 className="text-lg font-semibold">AI Risk Detector</h3>
+            <h3 className="text-xl font-semibold">AI Risk Detector</h3>
           </div>
           <ModuleInfoPopover
             title="AI Risk Detection"
@@ -45,7 +45,7 @@ export default function AIRiskDetectorPanel() {
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium">Risk Level</span>
                 <span
-                  className="text-sm font-bold px-3 py-1 rounded-full"
+                  className="text-sm font-bold px-3 py-1 rounded-full risk-badge"
                   style={{ backgroundColor: `${riskColors[riskLevel]}/20`, color: riskColors[riskLevel] }}
                 >
                   {riskLevel}
@@ -53,7 +53,7 @@ export default function AIRiskDetectorPanel() {
               </div>
               <div className="h-2 bg-border rounded-full overflow-hidden">
                 <div
-                  className="h-full transition-all duration-500"
+                  className="h-full transition-all duration-500 progress-bar"
                   style={{
                     width: `${riskPercentage[riskLevel]}%`,
                     backgroundColor: riskColors[riskLevel],
@@ -69,7 +69,7 @@ export default function AIRiskDetectorPanel() {
               </div>
               <div className="h-2 bg-border rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[oklch(0.7_0.25_145)] transition-all duration-300"
+                  className="h-full bg-cyber-accent transition-all duration-300 progress-bar"
                   style={{ width: `${Math.min((typingSpeed / 10) * 100, 100)}%` }}
                 />
               </div>
@@ -82,7 +82,7 @@ export default function AIRiskDetectorPanel() {
               </div>
               <div className="h-2 bg-border rounded-full overflow-hidden">
                 <div
-                  className="h-full bg-[oklch(0.75_0.20_85)] transition-all duration-300"
+                  className="h-full bg-[oklch(0.75_0.20_85)] transition-all duration-300 progress-bar"
                   style={{ width: `${patternScore}%` }}
                 />
               </div>
