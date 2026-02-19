@@ -1,18 +1,18 @@
 # Specification
 
 ## Summary
-**Goal:** Conduct a comprehensive security audit and fix identified bugs and vulnerabilities throughout the application.
+**Goal:** Implement comprehensive security improvements and accessibility enhancements based on code review findings.
 
 **Planned changes:**
-- Fix authentication security vulnerabilities in Internet Identity integration (token validation, session management, secure logout)
-- Audit and fix XSS vulnerabilities in user input handling, especially in keystroke capture and display
-- Implement encryption for sensitive data in localStorage and add validation for read operations
-- Add input validation to all Zustand store state update actions
-- Implement proper authorization guards and access control checks in backend actor methods
-- Fix accessibility issues (ARIA labels, keyboard navigation, focus management in modals)
-- Resolve race conditions in React Query cache invalidation and actor recreation logic
-- Improve error boundary implementation to catch and handle runtime errors gracefully
-- Fix memory leaks from animation loops, event listeners, and canvas operations in 3D components
-- Optimize simulation state calculations to prevent infinite loops and performance issues
+- Strengthen input sanitization with regex-based validation to block XSS patterns before HTML escaping
+- Add Content Security Policy (CSP) meta tag to restrict script sources and prevent inline script execution
+- Enhance localStorage encryption with key rotation, HMAC integrity verification, and graceful failure handling
+- Add rate limiting to keystroke capture to prevent rapid-fire injection attacks
+- Implement comprehensive state validation to enforce business rules and prevent malformed state updates
+- Add ARIA live regions to announce dynamic state changes to screen readers
+- Enhance keyboard navigation with arrow keys, Enter, and Escape key support in scenario panels
+- Add security headers configuration documentation for Internet Computer canister deployment
+- Implement proper Three.js resource cleanup to prevent WebGL context leaks
+- Optimize React Query configuration with appropriate caching, retry logic, and request deduplication
 
-**User-visible outcome:** Users experience a more secure, stable, and accessible application with proper error handling, no crashes, and improved performance during long sessions.
+**User-visible outcome:** The application will be more secure against XSS attacks and state manipulation, more accessible for screen reader users and keyboard-only navigation, and perform better with optimized resource management and query caching.

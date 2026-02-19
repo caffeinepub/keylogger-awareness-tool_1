@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-review-and-fix-authentication-security-vulnerabilities-in-the-internet-identity-integration-including-session-management-token-validation-and-secure-logout-flow",
-      "featureTitle": "Review and fix authentication security vulnerabilities in the Internet Identity integration, including session management, token validation, and secure logout flow",
+      "featureId": "feature-strengthen-input-sanitization-in-frontend-src-lib-inputsanitizer-ts-by-adding-comprehensive-regex-based-validation-to-block-script-injection-patterns-event-handlers-and-data-uris-before-html-escaping",
+      "featureTitle": "Strengthen input sanitization in frontend/src/lib/inputSanitizer.ts by adding comprehensive regex-based validation to block script injection patterns, event handlers, and data URIs before HTML escaping",
       "files": [
-        "frontend/src/pages/DashboardPage.tsx"
+        "frontend/src/lib/inputSanitizer.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -20,12 +20,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-audit-and-fix-xss-vulnerabilities-in-user-input-handling-particularly-in-the-simulatedkeyloggermodule-where-keystrokes-are-captured-and-displayed",
-      "featureTitle": "Audit and fix XSS vulnerabilities in user input handling, particularly in the SimulatedKeyloggerModule where keystrokes are captured and displayed",
+      "featureId": "feature-add-content-security-policy-csp-meta-tag-to-frontend-index-html-that-restricts-script-sources-to-self-and-blocks-inline-scripts-except-those-with-nonces-prevents-unsafe-eval-and-restricts-object-and-frame-sources",
+      "featureTitle": "Add Content Security Policy (CSP) meta tag to frontend/index.html that restricts script sources to 'self' and blocks inline scripts except those with nonces, prevents unsafe-eval, and restricts object and frame sources",
       "files": [
-        "frontend/src/components/AttackerDashboardPanel.tsx",
-        "frontend/src/components/SimulatedKeyloggerModule.tsx",
-        "frontend/src/hooks/useSimulationState.ts"
+        "frontend/index.html"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -40,10 +38,9 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-fix-localstorage-security-issues-by-encrypting-sensitive-data-and-implementing-proper-data-validation-on-read-operations-in-usesimulationstate-and-useappearancepreferences-hooks",
-      "featureTitle": "Fix localStorage security issues by encrypting sensitive data and implementing proper data validation on read operations in useSimulationState and useAppearancePreferences hooks",
+      "featureId": "feature-enhance-localstorage-encryption-in-frontend-src-lib-storageencryption-ts-by-implementing-key-rotation-on-session-start-adding-integrity-verification-with-hmac-signatures-and-handling-decryption-failures-gracefully-with-fallback-to-fresh-state",
+      "featureTitle": "Enhance localStorage encryption in frontend/src/lib/storageEncryption.ts by implementing key rotation on session start, adding integrity verification with HMAC signatures, and handling decryption failures gracefully with fallback to fresh state",
       "files": [
-        "frontend/src/hooks/useAppearancePreferences.ts",
         "frontend/src/hooks/useSimulationState.ts",
         "frontend/src/lib/storageEncryption.ts"
       ],
@@ -60,9 +57,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-review-and-fix-potential-state-manipulation-vulnerabilities-in-the-zustand-store-by-adding-input-validation-to-all-state-update-actions-in-usesimulationstate",
-      "featureTitle": "Review and fix potential state manipulation vulnerabilities in the Zustand store by adding input validation to all state update actions in useSimulationState",
+      "featureId": "feature-add-rate-limiting-to-usesimulationstate-hook-in-frontend-src-hooks-usesimulationstate-ts-to-prevent-rapid-fire-keystroke-injection-that-could-bypass-validation-implementing-a-configurable-maximum-keystrokes-per-second-threshold-with-queue-mechanism",
+      "featureTitle": "Add rate limiting to useSimulationState hook in frontend/src/hooks/useSimulationState.ts to prevent rapid-fire keystroke injection that could bypass validation, implementing a configurable maximum keystrokes per second threshold with queue mechanism",
       "files": [
+        "frontend/src/components/SimulatedKeyloggerModule.tsx",
         "frontend/src/hooks/useSimulationState.ts"
       ],
       "components": [
@@ -78,13 +76,30 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-fix-accessibility-issues-including-missing-aria-labels-keyboard-navigation-bugs-and-focus-management-problems-in-modal-components-scenarioquizmodal-onboardingoverlay",
-      "featureTitle": "Fix accessibility issues including missing ARIA labels, keyboard navigation bugs, and focus management problems in modal components (ScenarioQuizModal, OnboardingOverlay)",
+      "featureId": "feature-implement-comprehensive-state-validation-in-usesimulationstate-to-enforce-business-rules-risk-level-must-be-0-100-counters-must-be-non-negative-integers-captured-text-length-must-not-exceed-reasonable-limit-10000-characters-and-block-malformed-state-updates",
+      "featureTitle": "Implement comprehensive state validation in useSimulationState to enforce business rules: risk level must be 0-100, counters must be non-negative integers, captured text length must not exceed reasonable limit (10000 characters), and block malformed state updates",
       "files": [
-        "frontend/src/components/AdminDemoModeToggle.tsx",
-        "frontend/src/components/OnboardingOverlay.tsx",
-        "frontend/src/components/ScenarioQuizModal.tsx",
-        "frontend/src/components/SimulatedKeyloggerModule.tsx"
+        "frontend/src/hooks/useSimulationState.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-comprehensive-aria-live-regions-to-simulatedantivirusscanner-attackerdashboardpanel-and-airiskdetectorpanel-components-to-announce-state-changes-to-screen-readers-including-scan-results-threat-detections-and-risk-level-changes",
+      "featureTitle": "Add comprehensive ARIA live regions to SimulatedAntivirusScanner, AttackerDashboardPanel, and AIRiskDetectorPanel components to announce state changes to screen readers including scan results, threat detections, and risk level changes",
+      "files": [
+        "frontend/src/components/AIRiskDetectorPanel.tsx",
+        "frontend/src/components/AttackerDashboardPanel.tsx",
+        "frontend/src/components/SimulatedAntivirusScanner.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -99,12 +114,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-fix-error-boundary-implementation-to-properly-catch-and-handle-runtime-errors-throughout-the-application-preventing-white-screen-crashes",
-      "featureTitle": "Fix error boundary implementation to properly catch and handle runtime errors throughout the application, preventing white screen crashes",
+      "featureId": "feature-enhance-keyboard-navigation-in-testscenariospanel-by-implementing-arrow-key-navigation-between-scenario-cards-enter-key-to-activate-scenarios-and-escape-key-to-close-expanded-learning-content-sections",
+      "featureTitle": "Enhance keyboard navigation in TestScenariosPanel by implementing arrow key navigation between scenario cards, Enter key to activate scenarios, and Escape key to close expanded learning content sections",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/ErrorBoundary.tsx",
-        "frontend/src/pages/DashboardPage.tsx"
+        "frontend/src/components/TestScenariosPanel.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -114,16 +127,14 @@
         "github-export-icp-cli@1.0.0"
       ],
       "testIds": [
-        "REQ-8"
+        "REQ-7"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-audit-and-fix-memory-leaks-from-animation-loops-event-listeners-and-canvas-operations-in-threatmeter3d-animatedinfographics-and-threesceneaccent-components",
-      "featureTitle": "Audit and fix memory leaks from animation loops, event listeners, and canvas operations in ThreatMeter3D, AnimatedInfographics, and ThreeSceneAccent components",
+      "featureId": "feature-implement-proper-cleanup-of-three-js-resources-in-threesceneaccent-component-by-adding-disposal-of-geometries-materials-and-renderers-in-useeffect-cleanup-to-prevent-webgl-context-leaks",
+      "featureTitle": "Implement proper cleanup of Three.js resources in ThreeSceneAccent component by adding disposal of geometries, materials, and renderers in useEffect cleanup to prevent WebGL context leaks",
       "files": [
-        "frontend/src/components/AnimatedInfographics.tsx",
-        "frontend/src/components/ThreatMeter3D.tsx",
         "frontend/src/components/ThreeSceneAccent.tsx"
       ],
       "components": [
@@ -135,25 +146,6 @@
       ],
       "testIds": [
         "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-fix-potential-infinite-loop-and-performance-issues-in-simulation-state-calculations-particularly-in-the-auto-blocking-trigger-logic",
-      "featureTitle": "Fix potential infinite loop and performance issues in simulation state calculations, particularly in the auto-blocking trigger logic",
-      "files": [
-        "frontend/src/hooks/useSimulationState.ts",
-        "frontend/src/pages/DashboardPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-10"
       ],
       "confidence": "high"
     }

@@ -1,242 +1,193 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Security audit and bug fixes",
+  "title": "Implement comprehensive security improvements from code review",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Review and fix authentication security vulnerabilities in the Internet Identity integration, including session management, token validation, and secure logout flow",
+      "summary": "Strengthen input sanitization with regex-based validation to block XSS patterns before HTML escaping",
       "acceptanceCriteria": [
-        "Identity tokens are properly validated before use",
-        "Session expiration is handled securely",
-        "Logout clears all authentication state completely"
+        "Block common XSS patterns including <script>, javascript:, data:text/html, and inline event handlers",
+        "Validation occurs before HTML entity escaping",
+        "All existing sanitization tests continue to pass"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useActor.ts",
+          "path": "frontend/src/lib/inputSanitizer.ts",
           "operation": "modify",
-          "description": "Add identity token validation before actor creation to ensure tokens are valid and not expired. Add null checks and error handling for invalid identity states. Ensure actor is not created with stale or invalid credentials."
-        },
-        {
-          "path": "frontend/src/main.tsx",
-          "operation": "modify",
-          "description": "Add session expiration monitoring in the React Query provider setup. Implement automatic session cleanup when identity expires. Ensure query cache is cleared on logout."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Add authentication state checks before rendering sensitive simulation components. Ensure dashboard only displays when user has valid session. Add session expiration handling with user notification."
+          "description": "Add comprehensive regex-based validation to detect and block XSS patterns including script tags, javascript: and data: URIs, inline event handlers (onclick, onerror, onload, etc.), and other injection vectors. Implement validation before the existing HTML entity escaping to provide defense-in-depth. Keep existing sanitizeInput, removeHtmlTags, and validateInput functions operational."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Audit and fix XSS vulnerabilities in user input handling, particularly in the SimulatedKeyloggerModule where keystrokes are captured and displayed",
+      "summary": "Add Content Security Policy meta tag to restrict script sources and prevent unsafe inline scripts",
       "acceptanceCriteria": [
-        "All user input is properly sanitized before rendering",
-        "No innerHTML usage with unsanitized content",
-        "Special characters are escaped in keystroke display"
+        "CSP meta tag added to HTML head with script-src, object-src, frame-src, and base-uri directives",
+        "Application continues to function with stricter CSP rules",
+        "No console CSP violation errors in normal operation"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/SimulatedKeyloggerModule.tsx",
+          "path": "frontend/index.html",
           "operation": "modify",
-          "description": "Replace any innerHTML usage with textContent or React's JSX rendering. Add input sanitization for keystroke capture before storing in state. Escape special characters (< > & \" ') in all displayed keystroke text. Validate input against XSS patterns before processing."
-        },
-        {
-          "path": "frontend/src/components/AttackerDashboardPanel.tsx",
-          "operation": "modify",
-          "description": "Sanitize captured keystrokes and reconstructed text before rendering in the attacker view. Use React's automatic XSS protection by rendering text content through JSX variables rather than dangerouslySetInnerHTML. Add escaping for special characters in keystroke display."
-        },
-        {
-          "path": "frontend/src/hooks/useSimulationState.ts",
-          "operation": "modify",
-          "description": "Add input validation and sanitization in keystroke capture actions. Validate that keystroke data contains only safe characters before storing. Strip or escape HTML tags and script content from any captured input."
+          "description": "Add Content-Security-Policy meta tag in the <head> section with directives: script-src 'self' 'unsafe-inline' (required for Vite dev mode and React inline scripts); object-src 'none'; frame-src 'none'; base-uri 'self'. Configure policy to allow the application's existing inline scripts while blocking external and injected scripts. Ensure compatibility with Vite development server and production builds."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Fix localStorage security issues by encrypting sensitive data and implementing proper data validation on read operations in useSimulationState and useAppearancePreferences hooks",
+      "summary": "Enhance localStorage encryption with key rotation, HMAC integrity verification, and graceful failure handling",
       "acceptanceCriteria": [
-        "Sensitive simulation state is encrypted before localStorage storage",
-        "Data read from localStorage is validated and sanitized",
-        "Corrupted localStorage data does not crash the application"
+        "Encryption key rotates on each new browser session",
+        "HMAC signature validates data integrity before decryption",
+        "Corrupted or tampered data fails validation and triggers state reset",
+        "Existing encrypted data can be migrated or cleared safely"
       ],
       "file_operations": [
         {
+          "path": "frontend/src/lib/storageEncryption.ts",
+          "operation": "modify",
+          "description": "Implement key rotation by generating a new AES-GCM key on session start (check sessionStorage for existing key, generate if missing). Add HMAC-SHA256 signature generation and verification functions to ensure data integrity. Modify encryptData to compute and prepend HMAC signature. Modify decryptData to verify HMAC before attempting decryption, returning null on signature mismatch or decryption failure. Add version field to encrypted payloads to support future migration."
+        },
+        {
           "path": "frontend/src/hooks/useSimulationState.ts",
           "operation": "modify",
-          "description": "Add encryption wrapper for localStorage persistence of keystroke data using Web Crypto API. Implement try-catch blocks around localStorage read operations with fallback to default state. Validate data structure and types after reading from localStorage before using in state. Add schema validation to ensure stored data matches expected format."
-        },
-        {
-          "path": "frontend/src/hooks/useAppearancePreferences.ts",
-          "operation": "modify",
-          "description": "Add validation for localStorage reads with type checking and fallback to defaults. Wrap localStorage operations in try-catch to handle corrupted data gracefully. Validate that stored preference values are within allowed ranges before applying to state."
-        },
-        {
-          "path": "frontend/src/lib/storageEncryption.ts",
-          "operation": "create",
-          "description": "Create utility module providing encrypt and decrypt functions using Web Crypto API for localStorage data. Export functions for encrypting sensitive simulation data before storage and decrypting on read. Include error handling for encryption failures."
+          "description": "Update state persistence logic to handle decryption failures gracefully. When loading state from localStorage via storageEncryption.decryptData returns null (indicating corruption or tampering), log a warning and initialize with default state instead of throwing. Add error boundary handling for encryption/decryption operations."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Review and fix potential state manipulation vulnerabilities in the Zustand store by adding input validation to all state update actions in useSimulationState",
+      "summary": "Add rate limiting to keystroke capture with configurable threshold and queue mechanism",
       "acceptanceCriteria": [
-        "All state updates validate input types and ranges",
-        "Invalid state updates are rejected with error logging",
-        "State cannot be manipulated to invalid values through the store actions"
+        "Keystroke capture rate limited to configurable threshold (e.g., 50 keystrokes/second)",
+        "Excess keystrokes are queued or discarded with user notification",
+        "Rate limiting does not impact normal typing speeds",
+        "Rate limit resets appropriately when simulation is reset"
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useSimulationState.ts",
           "operation": "modify",
-          "description": "Add input validation to all Zustand store actions. Validate types, ranges, and allowed values for keystroke counts, risk levels, scanner states, and settings. Add bounds checking for numeric values (e.g., risk percentage 0-100, keystroke count >= 0). Reject invalid updates with console error logging. Add validation helpers for each state property type."
+          "description": "Add rate limiting to the captureKeystroke action using a sliding window algorithm. Store timestamps of recent keystrokes in the store. Configure MAX_KEYSTROKES_PER_SECOND (default 50). Check if adding a new keystroke would exceed the rate limit by counting keystrokes in the last 1-second window. If limit exceeded, either queue the keystroke for delayed processing or discard it and set a rateLimitExceeded flag. Reset rate limiting state in the resetSimulation action."
+        },
+        {
+          "path": "frontend/src/components/SimulatedKeyloggerModule.tsx",
+          "operation": "modify",
+          "description": "Display a warning message when rate limiting is active (check rateLimitExceeded flag from simulation state). Show an InContextWarning component indicating that typing is being rate-limited for security demonstration purposes. Clear the warning when rate limit resets."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Implement comprehensive state validation to enforce business rules and prevent malformed state",
+      "acceptanceCriteria": [
+        "All numeric state values validated within expected ranges",
+        "String lengths enforced with maximum limits",
+        "Invalid state updates rejected with error logging",
+        "State remains consistent even with attempted manipulation"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useSimulationState.ts",
+          "operation": "modify",
+          "description": "Add validateState helper function that enforces: riskLevel between 0-100, all counters (keystrokesCount, scansPerformed, blocksExecuted) are non-negative integers, capturedText length <= 10000 characters, typingSpeed >= 0. Wrap all state-modifying actions (captureKeystroke, updateRiskLevel, incrementScanCount, etc.) with validation. Log validation errors to console.error and reject invalid updates by returning early. Add unit tests for validation edge cases."
         }
       ]
     },
     {
       "id": "REQ-6",
-      "summary": "Fix accessibility issues including missing ARIA labels, keyboard navigation bugs, and focus management problems in modal components",
+      "summary": "Add ARIA live regions to announce dynamic state changes to screen readers",
       "acceptanceCriteria": [
-        "All interactive elements have proper ARIA labels",
-        "Keyboard navigation works correctly through all UI components",
-        "Focus is trapped and managed properly in modals",
-        "Screen reader announcements are present for state changes"
+        "aria-live regions added with appropriate politeness levels (polite/assertive)",
+        "Dynamic content changes announced to screen readers",
+        "Announcements are meaningful and not overly verbose",
+        "No duplicate or conflicting ARIA announcements"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/ScenarioQuizModal.tsx",
+          "path": "frontend/src/components/SimulatedAntivirusScanner.tsx",
           "operation": "modify",
-          "description": "Add focus trap implementation to prevent focus from leaving modal while open. Add ARIA labels for modal role, title, and description. Implement proper focus management: move focus to modal on open, return focus to trigger on close. Add keyboard event handlers for Escape key. Add aria-live regions for quiz state changes."
+          "description": "Add an aria-live=\"polite\" region that announces scan status changes (\"Scanning for threats\", \"Threat detected\", \"Threat quarantined\", \"Threat removed\"). Use visually-hidden text that updates when scanning state changes. Ensure announcements are concise and actionable."
         },
         {
-          "path": "frontend/src/components/OnboardingOverlay.tsx",
+          "path": "frontend/src/components/AttackerDashboardPanel.tsx",
           "operation": "modify",
-          "description": "Implement focus trap for onboarding modal. Add ARIA labels for navigation buttons, step indicators, and close button. Add keyboard navigation support for stepping through onboarding slides. Ensure focus moves to first interactive element on modal open. Add aria-live announcements for step transitions."
+          "description": "Add an aria-live=\"polite\" region that announces when new keystrokes are captured (e.g., \"Keystroke captured\" every 10 keystrokes to avoid announcement spam). Include announcement when transmission animation completes. Keep announcements brief to avoid overwhelming screen reader users."
         },
         {
-          "path": "frontend/src/components/AdminDemoModeToggle.tsx",
+          "path": "frontend/src/components/AIRiskDetectorPanel.tsx",
           "operation": "modify",
-          "description": "Add ARIA label to toggle button describing current state and action. Add keyboard support for Space and Enter keys. Ensure focus styles are visible. Add aria-pressed attribute to indicate toggle state."
-        },
-        {
-          "path": "frontend/src/components/SimulatedKeyloggerModule.tsx",
-          "operation": "modify",
-          "description": "Add ARIA labels to input field describing its purpose and security warnings. Add aria-describedby linking to warning messages. Add keyboard-accessible controls for reset and clear actions. Ensure screen reader announces when input is blocked."
-        },
-        {
-          "path": "frontend/src/components/TestScenariosPanel.tsx",
-          "operation": "modify",
-          "description": "Add ARIA labels to scenario buttons and expandable sections. Implement keyboard navigation for scenario selection. Add aria-expanded attributes for collapsible content. Ensure focus management when opening quiz modals."
+          "description": "Add an aria-live=\"assertive\" region (due to security-critical nature) that announces significant risk level changes (e.g., when crossing Low/Medium/High thresholds at 30% and 70%). Format announcements as \"Risk level: Medium\" or \"Threat level increased to High\". Avoid announcing every minor risk percentage change."
         }
       ]
     },
     {
       "id": "REQ-7",
-      "summary": "Review and fix race conditions in React Query cache invalidation and actor recreation logic in useActor hook when identity changes",
+      "summary": "Enhance keyboard navigation in TestScenariosPanel with arrow keys, Enter to activate, and Escape to close",
       "acceptanceCriteria": [
-        "Actor recreation completes before dependent queries execute",
-        "No stale actor instances are used after identity change",
-        "Cache invalidation happens in the correct order"
+        "Arrow keys navigate between scenario cards with visible focus indicator",
+        "Enter key activates selected scenario",
+        "Escape key closes expanded content and returns focus appropriately",
+        "Tab order remains logical and predictable"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useActor.ts",
+          "path": "frontend/src/components/TestScenariosPanel.tsx",
           "operation": "modify",
-          "description": "Add synchronization to ensure actor recreation completes before query invalidation. Use queryClient.cancelQueries before invalidation to prevent race conditions. Add identity version tracking to detect stale actor instances. Implement proper cleanup of old actor references before creating new ones. Add abort controller to cancel in-flight requests when identity changes."
-        },
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add query dependency on actor instance to ensure queries refetch when actor changes. Implement proper stale time and cache time settings to prevent using outdated actor references. Add enabled flags tied to actor readiness state."
+          "description": "Implement keyboard navigation using onKeyDown handlers. Add arrow key support (ArrowLeft/ArrowRight or ArrowUp/ArrowDown) to move focus between scenario cards using focus management refs. Make scenario cards focusable with tabIndex={0}. Handle Enter key to trigger scenario activation. Add Escape key handler to collapse expanded learning content sections and restore focus to the parent card. Ensure focus indicators are clearly visible using focus-visible styles. Maintain logical tab order."
         }
       ]
     },
     {
       "id": "REQ-8",
-      "summary": "Fix error boundary implementation to properly catch and handle runtime errors throughout the application, preventing white screen crashes",
+      "summary": "Add security headers configuration documentation for Internet Computer canister deployment",
       "acceptanceCriteria": [
-        "Error boundaries are present at key component tree levels",
-        "Errors are logged for debugging",
-        "Users see a helpful error message instead of blank screen",
-        "Application can recover from non-fatal errors"
+        "Documentation file created with header recommendations",
+        "Each header explained with purpose and recommended value",
+        "Instructions provided for IC canister configuration",
+        "Links to IC documentation included"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/ErrorBoundary.tsx",
+          "path": "docs/SECURITY.md",
           "operation": "create",
-          "description": "Create a React error boundary component that catches rendering errors, logs them to console, and displays a user-friendly error UI. Implement componentDidCatch for error logging and getDerivedStateFromError for UI fallback. Include a reset button to attempt recovery. Add error details display in development mode only."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Wrap the router and main application tree with the ErrorBoundary component to catch top-level errors. Add nested error boundaries around complex simulation components. Ensure error boundary placement prevents full app crashes."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Add error boundary around simulation panels to isolate component failures. Wrap keylogger module, scanner, and attacker dashboard in separate error boundaries. Add error recovery actions that reset local state on error."
+          "description": "Create comprehensive security documentation explaining HTTP security headers recommended for IC canister configuration. Document X-Frame-Options: DENY (prevent clickjacking), X-Content-Type-Options: nosniff (prevent MIME sniffing), Referrer-Policy: strict-origin-when-cross-origin (privacy), Permissions-Policy (disable unnecessary browser features). Include step-by-step instructions for configuring headers in dfx.json or using IC SDK HTTP response headers API. Provide links to Internet Computer documentation on asset certification and HTTP headers. Include CSP recommendations that complement the meta tag."
         }
       ]
     },
     {
       "id": "REQ-9",
-      "summary": "Audit and fix memory leaks from animation loops, event listeners, and canvas operations in ThreatMeter3D, AnimatedInfographics, and ThreeSceneAccent components",
+      "summary": "Implement proper cleanup of Three.js resources to prevent WebGL context leaks",
       "acceptanceCriteria": [
-        "All animation loops are properly cleaned up on unmount",
-        "Event listeners are removed when components unmount",
-        "Canvas contexts are properly disposed",
-        "No memory leaks detected in long-running sessions"
+        "Geometry and material resources disposed in cleanup function",
+        "WebGL context properly released on component unmount",
+        "No memory leaks detected after repeated mount/unmount cycles",
+        "Visual appearance remains unchanged"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/ThreatMeter3D.tsx",
-          "operation": "modify",
-          "description": "Add cleanup function in useEffect to cancel animation frames on unmount. Clear canvas context and remove event listeners. Ensure requestAnimationFrame loop is properly terminated. Add null checks before accessing canvas context."
-        },
-        {
-          "path": "frontend/src/components/AnimatedInfographics.tsx",
-          "operation": "modify",
-          "description": "Implement proper cleanup of canvas animation loops in useEffect return function. Cancel all requestAnimationFrame calls on component unmount. Remove resize event listeners. Dispose of canvas context and clear references."
-        },
-        {
           "path": "frontend/src/components/ThreeSceneAccent.tsx",
           "operation": "modify",
-          "description": "Add Three.js scene cleanup in useEffect return function. Dispose of geometries, materials, and renderer. Remove event listeners for resize and pointer events. Clean up orbit controls. Ensure animation loop is stopped on unmount."
-        },
-        {
-          "path": "frontend/src/components/TransmissionAnimation.tsx",
-          "operation": "modify",
-          "description": "Add cleanup for any animation intervals or timeouts in useEffect return. Ensure animation state is reset on unmount. Remove any event listeners attached during animation lifecycle."
+          "description": "Add comprehensive cleanup in useEffect return function that disposes Three.js resources. Call geometry.dispose() on the torus geometry, material.dispose() on the wireframe material, and renderer.dispose() to release WebGL context. Store references to geometry, material, and renderer in refs if needed for cleanup. Ensure cleanup runs on component unmount and before re-creating scene on dependency changes. Test that the visual appearance (rotating cyan wireframe torus) remains unchanged."
         }
       ]
     },
     {
       "id": "REQ-10",
-      "summary": "Fix potential infinite loop and performance issues in simulation state calculations, particularly in the auto-blocking trigger logic",
+      "summary": "Optimize React Query configuration with staleTime, cacheTime, retry settings, and request deduplication",
       "acceptanceCriteria": [
-        "State update loops are prevented with proper dependencies",
-        "Risk calculations do not trigger excessive re-renders",
-        "Auto-blocking logic executes efficiently without performance degradation"
+        "QueryClient configured with appropriate staleTime (e.g., 5 minutes)",
+        "Cache retention time set to prevent memory bloat",
+        "Retry logic configured for failed requests",
+        "Duplicate simultaneous requests deduplicated automatically"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useSimulationState.ts",
+          "path": "frontend/src/main.tsx",
           "operation": "modify",
-          "description": "Review and fix useEffect dependencies in auto-blocking logic to prevent infinite loops. Add early return guards to prevent redundant state updates. Memoize risk calculation functions to avoid recomputation on every render. Add debouncing to risk level updates to prevent rapid state changes. Ensure state updates only trigger when values actually change."
-        },
-        {
-          "path": "frontend/src/components/AIRiskDetectorPanel.tsx",
-          "operation": "modify",
-          "description": "Memoize expensive calculations using useMemo. Prevent re-renders of risk visualization when values haven't changed. Add React.memo wrapper if component receives same props frequently. Optimize risk level change detection to avoid unnecessary updates."
-        },
-        {
-          "path": "frontend/src/pages/DashboardPage.tsx",
-          "operation": "modify",
-          "description": "Add React.memo to expensive child components. Use useCallback for event handlers passed to simulation components. Prevent unnecessary re-renders by splitting state into smaller slices. Add performance monitoring for simulation state updates."
+          "description": "Configure QueryClient with optimized defaults: staleTime of 5 minutes (300000ms) to reduce redundant fetches, cacheTime of 10 minutes (600000ms) to balance memory usage and performance, retry logic with 3 attempts and exponential backoff for failed requests, and enable automatic request deduplication (enabled by default but verify). Add refetchOnWindowFocus: false for this educational demo app since data doesn't change server-side. Configure appropriate query and mutation default options."
         }
       ]
     }

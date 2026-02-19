@@ -1,203 +1,185 @@
 {
   "kind": "build_request",
-  "title": "Security audit and bug fixes",
+  "title": "Implement comprehensive security improvements from code review",
+  "projectName": "Keylogger Awareness Tool",
   "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Review and fix authentication security vulnerabilities in the Internet Identity integration, including session management, token validation, and secure logout flow",
+      "text": "Strengthen input sanitization in frontend/src/lib/inputSanitizer.ts by adding comprehensive regex-based validation to block script injection patterns, event handlers, and data URIs before HTML escaping",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-current"
         ],
         "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "check the website and do bug bounty",
+          "Review your current codebase for security issues"
         ]
       },
       "acceptanceCriteria": [
-        "Identity tokens are properly validated before use",
-        "Session expiration is handled securely",
-        "Logout clears all authentication state completely"
+        "Block common XSS patterns including <script>, javascript:, data:text/html, and inline event handlers",
+        "Validation occurs before HTML entity escaping",
+        "All existing sanitization tests continue to pass"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Audit and fix XSS vulnerabilities in user input handling, particularly in the SimulatedKeyloggerModule where keystrokes are captured and displayed",
+      "text": "Add Content Security Policy (CSP) meta tag to frontend/index.html that restricts script sources to 'self' and blocks inline scripts except those with nonces, prevents unsafe-eval, and restricts object and frame sources",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "All user input is properly sanitized before rendering",
-        "No innerHTML usage with unsanitized content",
-        "Special characters are escaped in keystroke display"
+        "CSP meta tag added to HTML head with script-src, object-src, frame-src, and base-uri directives",
+        "Application continues to function with stricter CSP rules",
+        "No console CSP violation errors in normal operation"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Fix localStorage security issues by encrypting sensitive data and implementing proper data validation on read operations in useSimulationState and useAppearancePreferences hooks",
+      "text": "Enhance localStorage encryption in frontend/src/lib/storageEncryption.ts by implementing key rotation on session start, adding integrity verification with HMAC signatures, and handling decryption failures gracefully with fallback to fresh state",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "Sensitive simulation state is encrypted before localStorage storage",
-        "Data read from localStorage is validated and sanitized",
-        "Corrupted localStorage data does not crash the application"
+        "Encryption key rotates on each new browser session",
+        "HMAC signature validates data integrity before decryption",
+        "Corrupted or tampered data fails validation and triggers state reset",
+        "Existing encrypted data can be migrated or cleared safely"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Review and fix potential state manipulation vulnerabilities in the Zustand store by adding input validation to all state update actions in useSimulationState",
+      "text": "Add rate limiting to useSimulationState hook in frontend/src/hooks/useSimulationState.ts to prevent rapid-fire keystroke injection that could bypass validation, implementing a configurable maximum keystrokes per second threshold with queue mechanism",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "All state updates validate input types and ranges",
-        "Invalid state updates are rejected with error logging",
-        "State cannot be manipulated to invalid values through the store actions"
+        "Keystroke capture rate limited to configurable threshold (e.g., 50 keystrokes/second)",
+        "Excess keystrokes are queued or discarded with user notification",
+        "Rate limiting does not impact normal typing speeds",
+        "Rate limit resets appropriately when simulation is reset"
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Audit the backend actor for missing access control checks and implement proper authorization guards for all public methods",
-      "target": "backend",
+      "text": "Implement comprehensive state validation in useSimulationState to enforce business rules: risk level must be 0-100, counters must be non-negative integers, captured text length must not exceed reasonable limit (10000 characters), and block malformed state updates",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "All backend methods validate caller identity where appropriate",
-        "Unauthorized access attempts are rejected",
-        "Backend implements the principle of least privilege"
+        "All numeric state values validated within expected ranges",
+        "String lengths enforced with maximum limits",
+        "Invalid state updates rejected with error logging",
+        "State remains consistent even with attempted manipulation"
       ]
     },
     {
       "id": "REQ-6",
-      "text": "Fix accessibility issues including missing ARIA labels, keyboard navigation bugs, and focus management problems in modal components (ScenarioQuizModal, OnboardingOverlay)",
+      "text": "Add comprehensive ARIA live regions to SimulatedAntivirusScanner, AttackerDashboardPanel, and AIRiskDetectorPanel components to announce state changes to screen readers including scan results, threat detections, and risk level changes",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "All interactive elements have proper ARIA labels",
-        "Keyboard navigation works correctly through all UI components",
-        "Focus is trapped and managed properly in modals",
-        "Screen reader announcements are present for state changes"
+        "aria-live regions added with appropriate politeness levels (polite/assertive)",
+        "Dynamic content changes announced to screen readers",
+        "Announcements are meaningful and not overly verbose",
+        "No duplicate or conflicting ARIA announcements"
       ]
     },
     {
       "id": "REQ-7",
-      "text": "Review and fix race conditions in React Query cache invalidation and actor recreation logic in useActor hook when identity changes",
+      "text": "Enhance keyboard navigation in TestScenariosPanel by implementing arrow key navigation between scenario cards, Enter key to activate scenarios, and Escape key to close expanded learning content sections",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "Actor recreation completes before dependent queries execute",
-        "No stale actor instances are used after identity change",
-        "Cache invalidation happens in the correct order"
+        "Arrow keys navigate between scenario cards with visible focus indicator",
+        "Enter key activates selected scenario",
+        "Escape key closes expanded content and returns focus appropriately",
+        "Tab order remains logical and predictable"
       ]
     },
     {
       "id": "REQ-8",
-      "text": "Fix error boundary implementation to properly catch and handle runtime errors throughout the application, preventing white screen crashes",
+      "text": "Add security headers configuration documentation in a new file docs/SECURITY.md explaining recommended HTTP security headers (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) to be configured at the Internet Computer canister level",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "Error boundaries are present at key component tree levels",
-        "Errors are logged for debugging",
-        "Users see a helpful error message instead of blank screen",
-        "Application can recover from non-fatal errors"
+        "Documentation file created with header recommendations",
+        "Each header explained with purpose and recommended value",
+        "Instructions provided for IC canister configuration",
+        "Links to IC documentation included"
       ]
     },
     {
       "id": "REQ-9",
-      "text": "Audit and fix memory leaks from animation loops, event listeners, and canvas operations in ThreatMeter3D, AnimatedInfographics, and ThreeSceneAccent components",
+      "text": "Implement proper cleanup of Three.js resources in ThreeSceneAccent component by adding disposal of geometries, materials, and renderers in useEffect cleanup to prevent WebGL context leaks",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "All animation loops are properly cleaned up on unmount",
-        "Event listeners are removed when components unmount",
-        "Canvas contexts are properly disposed",
-        "No memory leaks detected in long-running sessions"
+        "Geometry and material resources disposed in cleanup function",
+        "WebGL context properly released on component unmount",
+        "No memory leaks detected after repeated mount/unmount cycles",
+        "Visual appearance remains unchanged"
       ]
     },
     {
       "id": "REQ-10",
-      "text": "Fix potential infinite loop and performance issues in simulation state calculations, particularly in the auto-blocking trigger logic",
+      "text": "Optimize React Query configuration in frontend/src/main.tsx by adding staleTime, cacheTime, and retry settings appropriate for the application's needs, and implement request deduplication to prevent redundant backend calls",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "detect the bugs and vulnerabilities in the website and rectify them"
+          "msg-current"
         ]
       },
       "acceptanceCriteria": [
-        "State update loops are prevented with proper dependencies",
-        "Risk calculations do not trigger excessive re-renders",
-        "Auto-blocking logic executes efficiently without performance degradation"
+        "QueryClient configured with appropriate staleTime (e.g., 5 minutes)",
+        "Cache retention time set to prevent memory bloat",
+        "Retry logic configured for failed requests",
+        "Duplicate simultaneous requests deduplicated automatically"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the Internet Identity hook implementation (frontend/src/hooks/useInternetIdentity.ts)",
-    "Do not change the core authentication flow, only add security validations",
-    "Maintain backward compatibility with existing localStorage data structures",
-    "Do not alter the visual design or user experience while fixing bugs"
+    "Do not modify authentication flow in useInternetIdentity.ts or useActor.ts",
+    "Do not change shadcn/ui components in frontend/src/components/ui",
+    "Maintain all existing component functionality and visual appearance",
+    "Keep backend/main.mo as minimal placeholder - no backend logic required",
+    "All security improvements must work client-side only"
   ],
   "nonGoals": [
-    "Adding new features or functionality",
-    "Redesigning the UI or changing the visual appearance",
-    "Implementing server-side security measures beyond the Internet Computer platform",
-    "Adding new third-party security libraries"
+    "Backend security implementation (no backend logic exists)",
+    "External penetration testing or live vulnerability scanning",
+    "Integration with third-party security services",
+    "Server-side validation or authentication",
+    "Real keylogger detection capabilities"
   ],
   "imageRequirements": {
     "required": [],

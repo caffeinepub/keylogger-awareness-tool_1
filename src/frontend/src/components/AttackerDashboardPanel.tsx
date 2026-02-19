@@ -4,10 +4,12 @@ import ModuleInfoPopover from './ModuleInfoPopover';
 import TransmissionAnimation from './TransmissionAnimation';
 import { useSimulationState } from '../hooks/useSimulationState';
 import { sanitizeDisplayText } from '@/lib/inputSanitizer';
-import { useMemo } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 
 export default function AttackerDashboardPanel() {
   const { capturedStream, demoInput, settings } = useSimulationState();
+  const liveRegionRef = useRef<HTMLDivElement>(null);
+  const lastAnnouncedCount = useRef(0);
 
   const sanitizedKeystrokes = useMemo(
     () => capturedStream.map(event => ({
@@ -22,9 +24,28 @@ export default function AttackerDashboardPanel() {
     [demoInput]
   );
 
+  // Announce keystroke captures to screen readers (throttled to every 10 keystrokes)
+  useEffect(() => {
+    if (!liveRegionRef.current) return;
+
+    const currentCount = capturedStream.length;
+    if (currentCount > 0 && currentCount % 10 === 0 && currentCount !== lastAnnouncedCount.current) {
+      liveRegionRef.current.textContent = `${currentCount} keystrokes captured`;
+      lastAnnouncedCount.current = currentCount;
+    }
+  }, [capturedStream.length]);
+
   return (
     <div className="glass-panel p-6 rounded-xl border border-[oklch(0.65_0.25_0)]/50 relative overflow-hidden bg-[oklch(0.65_0.25_0)]/5">
       <div className="absolute top-0 left-0 w-32 h-32 bg-[oklch(0.65_0.25_0)]/10 rounded-full blur-3xl" />
+      
+      {/* Screen reader announcements */}
+      <div
+        ref={liveRegionRef}
+        className="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      />
       
       <div className="relative">
         <div className="flex items-center justify-between mb-4">

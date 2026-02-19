@@ -1,95 +1,105 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Website security audit and bug fix project",
-  "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": true,
+  "summary": "Security review and improvements for the application",
+  "architectural_notes": [
+    "Security review requested for authentication, authorization, input validation, and common web vulnerabilities"
+  ],
+  "known_issues": [
+    "Previous build attempt for security improvements failed"
+  ],
+  "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-review-and-fix-authentication-security-vulnerabilities-in-the-internet-identity-integration-including-session-management-token-validation-and-secure-logout-flow",
-      "title": "Review and fix authentication security vulnerabilities in the Internet Identity integration, including session management, token validation, and secure logout flow",
+      "id": "feature-strengthen-input-sanitization-in-frontend-src-lib-inputsanitizer-ts-by-adding-comprehensive-regex-based-validation-to-block-script-injection-patterns-event-handlers-and-data-uris-before-html-escaping",
+      "title": "Strengthen input sanitization in frontend/src/lib/inputSanitizer.ts by adding comprehensive regex-based validation to block script injection patterns, event handlers, and data URIs before HTML escaping",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-audit-and-fix-xss-vulnerabilities-in-user-input-handling-particularly-in-the-simulatedkeyloggermodule-where-keystrokes-are-captured-and-displayed",
-      "title": "Audit and fix XSS vulnerabilities in user input handling, particularly in the SimulatedKeyloggerModule where keystrokes are captured and displayed",
+      "id": "feature-add-content-security-policy-csp-meta-tag-to-frontend-index-html-that-restricts-script-sources-to-self-and-blocks-inline-scripts-except-those-with-nonces-prevents-unsafe-eval-and-restricts-object-and-frame-sources",
+      "title": "Add Content Security Policy (CSP) meta tag to frontend/index.html that restricts script sources to 'self' and blocks inline scripts except those with nonces, prevents unsafe-eval, and restricts object and frame sources",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-fix-localstorage-security-issues-by-encrypting-sensitive-data-and-implementing-proper-data-validation-on-read-operations-in-usesimulationstate-and-useappearancepreferences-hooks",
-      "title": "Fix localStorage security issues by encrypting sensitive data and implementing proper data validation on read operations in useSimulationState and useAppearancePreferences hooks",
+      "id": "feature-enhance-localstorage-encryption-in-frontend-src-lib-storageencryption-ts-by-implementing-key-rotation-on-session-start-adding-integrity-verification-with-hmac-signatures-and-handling-decryption-failures-gracefully-with-fallback-to-fresh-state",
+      "title": "Enhance localStorage encryption in frontend/src/lib/storageEncryption.ts by implementing key rotation on session start, adding integrity verification with HMAC signatures, and handling decryption failures gracefully with fallback to fresh state",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-review-and-fix-potential-state-manipulation-vulnerabilities-in-the-zustand-store-by-adding-input-validation-to-all-state-update-actions-in-usesimulationstate",
-      "title": "Review and fix potential state manipulation vulnerabilities in the Zustand store by adding input validation to all state update actions in useSimulationState",
+      "id": "feature-add-rate-limiting-to-usesimulationstate-hook-in-frontend-src-hooks-usesimulationstate-ts-to-prevent-rapid-fire-keystroke-injection-that-could-bypass-validation-implementing-a-configurable-maximum-keystrokes-per-second-threshold-with-queue-mechanism",
+      "title": "Add rate limiting to useSimulationState hook in frontend/src/hooks/useSimulationState.ts to prevent rapid-fire keystroke injection that could bypass validation, implementing a configurable maximum keystrokes per second threshold with queue mechanism",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-fix-accessibility-issues-including-missing-aria-labels-keyboard-navigation-bugs-and-focus-management-problems-in-modal-components-scenarioquizmodal-onboardingoverlay",
-      "title": "Fix accessibility issues including missing ARIA labels, keyboard navigation bugs, and focus management problems in modal components (ScenarioQuizModal, OnboardingOverlay)",
+      "id": "feature-implement-comprehensive-state-validation-in-usesimulationstate-to-enforce-business-rules-risk-level-must-be-0-100-counters-must-be-non-negative-integers-captured-text-length-must-not-exceed-reasonable-limit-10000-characters-and-block-malformed-state-updates",
+      "title": "Implement comprehensive state validation in useSimulationState to enforce business rules: risk level must be 0-100, counters must be non-negative integers, captured text length must not exceed reasonable limit (10000 characters), and block malformed state updates",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-comprehensive-aria-live-regions-to-simulatedantivirusscanner-attackerdashboardpanel-and-airiskdetectorpanel-components-to-announce-state-changes-to-screen-readers-including-scan-results-threat-detections-and-risk-level-changes",
+      "title": "Add comprehensive ARIA live regions to SimulatedAntivirusScanner, AttackerDashboardPanel, and AIRiskDetectorPanel components to announce state changes to screen readers including scan results, threat detections, and risk level changes",
       "reqIds": [
         "REQ-6"
       ],
       "version": 1
     },
     {
-      "id": "feature-fix-error-boundary-implementation-to-properly-catch-and-handle-runtime-errors-throughout-the-application-preventing-white-screen-crashes",
-      "title": "Fix error boundary implementation to properly catch and handle runtime errors throughout the application, preventing white screen crashes",
+      "id": "feature-enhance-keyboard-navigation-in-testscenariospanel-by-implementing-arrow-key-navigation-between-scenario-cards-enter-key-to-activate-scenarios-and-escape-key-to-close-expanded-learning-content-sections",
+      "title": "Enhance keyboard navigation in TestScenariosPanel by implementing arrow key navigation between scenario cards, Enter key to activate scenarios, and Escape key to close expanded learning content sections",
       "reqIds": [
-        "REQ-8"
+        "REQ-7"
       ],
       "version": 1
     },
     {
-      "id": "feature-audit-and-fix-memory-leaks-from-animation-loops-event-listeners-and-canvas-operations-in-threatmeter3d-animatedinfographics-and-threesceneaccent-components",
-      "title": "Audit and fix memory leaks from animation loops, event listeners, and canvas operations in ThreatMeter3D, AnimatedInfographics, and ThreeSceneAccent components",
+      "id": "feature-implement-proper-cleanup-of-three-js-resources-in-threesceneaccent-component-by-adding-disposal-of-geometries-materials-and-renderers-in-useeffect-cleanup-to-prevent-webgl-context-leaks",
+      "title": "Implement proper cleanup of Three.js resources in ThreeSceneAccent component by adding disposal of geometries, materials, and renderers in useEffect cleanup to prevent WebGL context leaks",
       "reqIds": [
         "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-fix-potential-infinite-loop-and-performance-issues-in-simulation-state-calculations-particularly-in-the-auto-blocking-trigger-logic",
-      "title": "Fix potential infinite loop and performance issues in simulation state calculations, particularly in the auto-blocking trigger logic",
-      "reqIds": [
-        "REQ-10"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [
     {
-      "id": "AR-5",
-      "summary": "Audit the backend actor for missing access control checks and implement proper authorization guards for all public methods",
+      "id": "AR-1",
+      "summary": "Security code review and improvements",
+      "reqIds": [],
+      "status": "in_progress"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Add security headers configuration documentation in a new file docs/SECURITY.md explaining recommended HTTP security headers (X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy) to be configured at the Internet Computer canister level",
       "reqIds": [
-        "REQ-5"
+        "REQ-8"
       ],
       "status": "pending"
     },
     {
-      "id": "AR-7",
-      "summary": "Review and fix race conditions in React Query cache invalidation and actor recreation logic in useActor hook when identity changes",
+      "id": "AR-11",
+      "summary": "Optimize React Query configuration in frontend/src/main.tsx by adding staleTime, cacheTime, and retry settings appropriate for the application's needs, and implement request deduplication to prevent redundant backend calls",
       "reqIds": [
-        "REQ-7"
+        "REQ-10"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Security audit and bug fixes",
+  "projectName": "Keylogger Awareness Tool",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

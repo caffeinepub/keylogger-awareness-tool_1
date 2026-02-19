@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { RotateCcw, BookOpen, GraduationCap, ChevronDown, ChevronUp, Star } from 'lucide-react';
 import ModuleInfoPopover from './ModuleInfoPopover';
 import ScenarioQuizModal from './ScenarioQuizModal';
@@ -14,6 +14,8 @@ export default function TestScenariosPanel() {
   const [isQuizModalOpen, setIsQuizModalOpen] = useState(false);
   const [activeScenario, setActiveScenario] = useState<{ id: string; name: string } | null>(null);
   const [expandedContent, setExpandedContent] = useState<Record<string, boolean>>({});
+  const [focusedScenarioIndex, setFocusedScenarioIndex] = useState<number>(-1);
+  const scenarioRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const handleTakeTest = (scenarioId: string, scenarioName: string) => {
     setActiveScenario({ id: scenarioId, name: scenarioName });
@@ -31,9 +33,44 @@ export default function TestScenariosPanel() {
     }));
   };
 
+  // Keyboard navigation handler
+  const handleKeyDown = (e: React.KeyboardEvent, index: number, scenarioId: string) => {
+    const totalScenarios = TEST_SCENARIOS.length;
+
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+        e.preventDefault();
+        const nextIndex = (index + 1) % totalScenarios;
+        setFocusedScenarioIndex(nextIndex);
+        scenarioRefs.current[nextIndex]?.focus();
+        break;
+
+      case 'ArrowLeft':
+      case 'ArrowUp':
+        e.preventDefault();
+        const prevIndex = (index - 1 + totalScenarios) % totalScenarios;
+        setFocusedScenarioIndex(prevIndex);
+        scenarioRefs.current[prevIndex]?.focus();
+        break;
+
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        toggleContent(scenarioId);
+        break;
+
+      case 'Escape':
+        e.preventDefault();
+        if (expandedContent[scenarioId]) {
+          toggleContent(scenarioId);
+        }
+        break;
+    }
+  };
+
   return (
     <>
-      {/* Ensure panel container doesn't interfere with button clicks */}
       <div className="glass-panel p-6 rounded-xl border border-border/50 relative z-auto" data-testid="test-scenarios-panel">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
@@ -53,85 +90,85 @@ export default function TestScenariosPanel() {
           </button>
         </div>
 
-        {/* Scenarios Grid */}
         <div className="grid md:grid-cols-2 gap-4">
-          {TEST_SCENARIOS.map((scenario) => {
+          {TEST_SCENARIOS.map((scenario, index) => {
             const content = getScenarioContent(scenario.id);
             const isExpanded = expandedContent[scenario.id];
 
             return (
               <div
                 key={scenario.id}
-                className="scenario-card p-4 bg-background/50 border border-border rounded-xl hover:border-cyber-accent/50 transition-all group relative"
+                ref={(el) => {
+                  scenarioRefs.current[index] = el;
+                }}
+                tabIndex={0}
+                onKeyDown={(e) => handleKeyDown(e, index, scenario.id)}
+                className="glass-panel p-4 rounded-lg border border-border/50 hover:border-[oklch(0.7_0.25_145)]/50 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-[oklch(0.7_0.25_145)] focus:ring-offset-2 focus:ring-offset-background"
                 data-testid={`scenario-card-${scenario.id}`}
               >
-                <div className="space-y-3">
-                  {/* Scenario Header */}
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <h4 className="font-semibold text-base">{scenario.name}</h4>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h4 className="font-semibold text-sm">{scenario.name}</h4>
                       {scenario.recommended && (
-                        <Badge variant="secondary" className="bg-cyber-accent/10 text-cyber-accent border-cyber-accent/30 text-xs">
-                          <Star className="w-3 h-3 mr-1 fill-current" />
+                        <Badge variant="secondary" className="text-xs">
+                          <Star className="w-3 h-3 mr-1" />
                           Recommended
                         </Badge>
                       )}
                     </div>
-                    <p className="text-sm text-muted-foreground mb-1.5">{scenario.description}</p>
-                    <p className="text-xs text-cyber-accent font-medium">Expected: {scenario.expected}</p>
-                  </div>
-
-                  {/* Learning Content */}
-                  {content && (
-                    <Collapsible open={isExpanded} onOpenChange={() => toggleContent(scenario.id)}>
-                      <CollapsibleTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="w-full justify-between text-xs h-9 hover:bg-accent/50"
-                        >
-                          <span className="flex items-center gap-2">
-                            <BookOpen className="w-4 h-4" />
-                            {content.title}
-                          </span>
-                          {isExpanded ? (
-                            <ChevronUp className="w-4 h-4" />
-                          ) : (
-                            <ChevronDown className="w-4 h-4" />
-                          )}
-                        </Button>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent className="mt-2">
-                        <div className="p-3 bg-background/80 rounded-lg border border-border/50">
-                          <p className="text-xs text-muted-foreground leading-relaxed">
-                            {content.content}
-                          </p>
-                        </div>
-                      </CollapsibleContent>
-                    </Collapsible>
-                  )}
-
-                  {/* Action Buttons - ensure they're above any background layers */}
-                  <div className="flex gap-2 pt-3 border-t border-border/50 relative z-10">
-                    <Button
-                      onClick={() => handleTakeTest(scenario.id, scenario.name)}
-                      size="sm"
-                      className="flex-1 h-9 text-xs interactive-button"
-                      variant="default"
-                      data-testid={`take-test-${scenario.id}`}
-                    >
-                      <GraduationCap className="w-4 h-4 mr-1.5" />
-                      Take Test
-                    </Button>
+                    <p className="text-xs text-muted-foreground">{scenario.description}</p>
                   </div>
                 </div>
+
+                <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
+                  <span className="px-2 py-0.5 bg-accent rounded">
+                    Expected: {scenario.expected}
+                  </span>
+                </div>
+
+                {content && (
+                  <Collapsible open={isExpanded} onOpenChange={() => toggleContent(scenario.id)}>
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-between text-xs mb-2"
+                        aria-expanded={isExpanded}
+                        aria-label={`${isExpanded ? 'Hide' : 'Show'} learning content for ${scenario.name}`}
+                      >
+                        <span className="flex items-center gap-1">
+                          <BookOpen className="w-3 h-3" />
+                          Learning Content
+                        </span>
+                        {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="space-y-2 mb-3">
+                      <div className="text-xs bg-accent/30 p-2 rounded">
+                        <p className="font-medium mb-1">{content.title}</p>
+                        <p className="text-muted-foreground">{content.content}</p>
+                      </div>
+                    </CollapsibleContent>
+                  </Collapsible>
+                )}
+
+                <Button
+                  onClick={() => handleTakeTest(scenario.id, scenario.name)}
+                  size="sm"
+                  className="w-full text-xs"
+                  data-testid={`take-test-${scenario.id}`}
+                  aria-label={`Take quiz for ${scenario.name}`}
+                >
+                  <GraduationCap className="w-3 h-3 mr-1" />
+                  Take Test
+                </Button>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Quiz Modal */}
       {activeScenario && (
         <ScenarioQuizModal
           isOpen={isQuizModalOpen}

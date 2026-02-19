@@ -1,13 +1,48 @@
 import { Shield, Search, AlertTriangle, Trash2 } from 'lucide-react';
 import ModuleInfoPopover from './ModuleInfoPopover';
 import { useSimulationState } from '../hooks/useSimulationState';
+import { useEffect, useRef } from 'react';
 
 export default function SimulatedAntivirusScanner() {
   const { avStatus, startAVScan, quarantineThreat, removeThreat } = useSimulationState();
+  const liveRegionRef = useRef<HTMLDivElement>(null);
+
+  // Announce status changes to screen readers
+  useEffect(() => {
+    if (!liveRegionRef.current) return;
+
+    let announcement = '';
+    switch (avStatus) {
+      case 'scanning':
+        announcement = 'Scanning for threats';
+        break;
+      case 'detected':
+        announcement = 'Threat detected';
+        break;
+      case 'quarantined':
+        announcement = 'Threat quarantined';
+        break;
+      case 'removed':
+        announcement = 'Threat removed successfully';
+        break;
+    }
+
+    if (announcement) {
+      liveRegionRef.current.textContent = announcement;
+    }
+  }, [avStatus]);
 
   return (
     <div className="glass-panel p-6 rounded-xl border border-border/50 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-32 h-32 bg-[oklch(0.7_0.25_145)]/10 rounded-full blur-3xl" />
+      
+      {/* Screen reader announcements */}
+      <div
+        ref={liveRegionRef}
+        className="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+      />
       
       <div className="relative">
         <div className="flex items-center justify-between mb-4">
@@ -30,6 +65,7 @@ export default function SimulatedAntivirusScanner() {
               <button
                 onClick={startAVScan}
                 className="px-6 py-2 bg-[oklch(0.7_0.25_145)] text-white rounded-lg hover:bg-[oklch(0.6_0.25_145)] transition-colors"
+                aria-label="Start antivirus scan"
               >
                 Start Scan
               </button>
@@ -63,12 +99,14 @@ export default function SimulatedAntivirusScanner() {
                   <button
                     onClick={quarantineThreat}
                     className="flex-1 px-4 py-2 bg-[oklch(0.75_0.20_85)] text-white rounded-lg hover:bg-[oklch(0.65_0.20_85)] transition-colors"
+                    aria-label="Quarantine threat"
                   >
                     Quarantine
                   </button>
                   <button
                     onClick={removeThreat}
                     className="flex-1 px-4 py-2 bg-[oklch(0.65_0.25_0)] text-white rounded-lg hover:bg-[oklch(0.55_0.25_0)] transition-colors flex items-center justify-center gap-2"
+                    aria-label="Remove threat"
                   >
                     <Trash2 className="w-4 h-4" />
                     Remove

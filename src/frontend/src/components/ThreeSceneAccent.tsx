@@ -1,10 +1,30 @@
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { useRef, useEffect } from 'react';
-import { Mesh } from 'three';
+import { Mesh, TorusGeometry, MeshStandardMaterial } from 'three';
 
 function RotatingRing() {
   const meshRef = useRef<Mesh>(null);
+  const geometryRef = useRef<TorusGeometry | null>(null);
+  const materialRef = useRef<MeshStandardMaterial | null>(null);
+
+  useEffect(() => {
+    // Store references for cleanup
+    if (meshRef.current) {
+      geometryRef.current = meshRef.current.geometry as TorusGeometry;
+      materialRef.current = meshRef.current.material as MeshStandardMaterial;
+    }
+
+    return () => {
+      // Dispose Three.js resources
+      if (geometryRef.current) {
+        geometryRef.current.dispose();
+      }
+      if (materialRef.current) {
+        materialRef.current.dispose();
+      }
+    };
+  }, []);
 
   useFrame((state) => {
     if (meshRef.current) {
@@ -26,7 +46,7 @@ export default function ThreeSceneAccent() {
 
   useEffect(() => {
     return () => {
-      // Cleanup Three.js resources
+      // Cleanup WebGL context
       if (containerRef.current) {
         const canvas = containerRef.current.querySelector('canvas');
         if (canvas) {

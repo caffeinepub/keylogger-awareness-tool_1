@@ -2,9 +2,11 @@ import { Keyboard } from 'lucide-react';
 import InContextWarning from './InContextWarning';
 import ModuleInfoPopover from './ModuleInfoPopover';
 import { useSimulationState } from '../hooks/useSimulationState';
+import { Alert, AlertDescription } from './ui/alert';
+import { AlertTriangle } from 'lucide-react';
 
 export default function SimulatedKeyloggerModule() {
-  const { demoInput, setDemoInput, isBlocked } = useSimulationState();
+  const { demoInput, setDemoInput, isBlocked, rateLimitExceeded } = useSimulationState();
 
   return (
     <div className="glass-panel p-6 rounded-xl border border-border/50 relative overflow-hidden">
@@ -24,6 +26,15 @@ export default function SimulatedKeyloggerModule() {
         </div>
 
         <InContextWarning message="This is a simulation for educational purposes only. Type in the box below to see how a keylogger might capture input." />
+
+        {rateLimitExceeded && (
+          <Alert variant="destructive" className="mt-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              Rate limit exceeded. Typing is being throttled for security demonstration purposes. Please slow down your typing speed.
+            </AlertDescription>
+          </Alert>
+        )}
 
         <div className="mt-4">
           <label className="block text-sm font-medium mb-2" htmlFor="demo-input">
